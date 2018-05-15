@@ -154,7 +154,6 @@ def helpmessage():
                   "╠➥ ScreenshootWebsite「LinkUrl」" + "\n" + \
                   "║" + "\n" + \
                   "╚═〘Ｈ̶̵̷͓͓͓̽̽̽Ｉ ̶̵̷͓͓͓̽̽̽Ｅ̶̵̷͓͓͓̽̽̽Ｔ̶̵̷͓͓͓̽̽̽Ｏ̶̵̷͓͓͓̽̽̽Ｃ̶̵̷͓͓͓̽̽̽Ｉ ̶̵̷͓͓͓̽̽̽Ｈ̶̵̷͓͓͓̽̽̽〙"
-                  " "
     return helpMessage
     
 def helptexttospeech():
