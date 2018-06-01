@@ -80,6 +80,7 @@ def helpmessage():
                   "✨คำสั่ง" + "\n" + \
                   "✨คำสั่ง2" + "\n" + \
          	  " " + "\n" + \
+                  "✪〘สเตตัส〙✪ " + "\n" + \
                   "✨Speed" + "\n" + \
                   "✨เช็คค่า" + "\n" + \
                   "✨ข้อมูล" + "\n" + \
@@ -90,7 +91,8 @@ def helpmessage():
                   "✨ตัส" + "\n" + \
                   "✨รูป" + "\n" + \
                   "✨ปก" + "\n" + \
-		          " " + "\n" + \
+		  " " + "\n" + \
+		  "✪〘คนอื่น〙✪ " + "\n" + \
                   "✨คท @" + "\n" + \
                   "✨มิด @" + "\n" + \
                   "✨ชื่อ @" + "\n" + \
@@ -101,19 +103,22 @@ def helpmessage():
                   "✨!มิด" "\n" + \
                   "✨!คท" + "\n" + \
                   "✨ก็อปปี้ @" + "\n" +\
-	              " " + "\n" + \
+	          " " + "\n" + \
+		  "✪〘คำสั่งอื่นๆ〙✪ " + "\n" + \ 
                   "✨พิมตาม on/off" + "\n" + \
                   "✨เพิ่มพิมตาม" + "\n" + \
                   "✨ลบพิมตาม" + "\n" + \
                   "✨รีบอท" + "\n" + \
                   "✨ออน" + "\n" + \
                   "✨พูด(ข้อความ)" + "\n" + \
-                  "✨name (ชื่อ)" + "\n" + \
+                  "✨ชื่อ: (ข้อความ)" + "\n" + \
+		  "✨ตัส: (ข้อความ)" + "\n" + \
                   "✨เตะ" + "\n" + \
                   "✨ข้อมูล" + "\n" + \
                   "✨โทร" + "\n" + \
                   "✨เชคแอด" + "\n" + \
-		          " " + "\n" + \
+		  " " + "\n" + \
+	          "✪〘กลุ่ม〙✪ " + "\n" + \
                   "✨แทค" + "\n" + \
                   "✨ชื่อกลุ่ม" + "\n" + \
                   "✨ไอดีกลุ่ม" + "\n" + \
@@ -127,12 +132,13 @@ def helpmessage():
                   "✨ลบเวลา" + "\n" + \
                   "✨ยกเลิก" + "\n" + \
                   "✨ลิ้งกลุ่ม" + "\n" + \
-	              "✨ลิ้ง 「On/Off」" + "\n" + \
+	          "✨ลิ้ง 「On/Off」" + "\n" + \
                   "✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡"
     return helpMessage
     
 def helptexttospeech():
     helpTextToSpeech =   "✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨" + "\n" + \
+                         "✪〘คำสั่งการตั้งค่า〙✪ " + "\n" + \
                          "👑Tag 「On/Off」" + "\n" + \
                          "👑Tag2 「On/Off」" + "\n" + \
                          "👑AutoJoin 「On/Off」" + "\n" + \
@@ -303,7 +309,7 @@ def lineBot(op):
                     helpTranslate = helptranslate()
                     nadya.sendMessage(to, str(helpTranslate))
 #==============================================================================
-               elif "ไวรัส." == msg.text.lower():
+                elif "ไวรัส." == msg.text.lower():
                     nadya.sendMessage(to, "เด้งไปดิ5555555")
                     nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2',")
                 elif "ทีมงาน" == msg.text.lower():
@@ -334,8 +340,15 @@ def lineBot(op):
                     nadya.sendMessage(to,"█████████▒... 90.0%")
                     nadya.sendMessage(to,"███████████..100.0%")
                     nadya.sendMessage(to,"👍บอทปกติดีʕ•ᴥ•ʔ")
-                elif "name " in msg.text.lower():
-                    spl = re.split("name ",msg.text,flags=re.IGNORECASE)
+	        elif "ตัส:" in msg.text.lower():
+                    spl = re.split("ตัส:",msg.text,flags=re.IGNORECASE)
+                    if spl[0] == "":
+                       prof = nadya.getProfile()
+                       prof.statusMessage = spl[1]
+                       nadya.updateProfile(prof)
+                       nadya.sendMessage(to, "👍เปลี่ยนตัสสำเร็จแล้วʕ•ᴥ•ʔ")
+                elif "ชื่อ:" in msg.text.lower():
+                    spl = re.split("ชื่อ:",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
                        prof = nadya.getProfile()
                        prof.displayName = spl[1]
@@ -447,7 +460,7 @@ def lineBot(op):
                         else: ret_ += "\n║ระบบเช็คสติกเกอร์ ✘ "
                         if settings["detectMention"] == True: ret_ += "\n║ระบบตอบกลับคนแทค ✔"
                         else: ret_ += "\n║ระบบตอบกลับคนแทค ✘"
-                        if settings["potoMention"] == True: ret_ += "\n║ระบบแทคส่งรูป✔ "
+                        if settings["Tag2"] == True: ret_ += "\n║ระบบแทคส่งรูป ✔ "
                         else: ret_ += "\n║ระบบแทคส่งรูป ✘ "
                         ret_ += "\n╚════════════"
                         nadya.sendMessage(to, str(ret_))
@@ -692,6 +705,17 @@ def lineBot(op):
                         nadya.sendMessage(msg.to, "Gagal restore profile")
                         
 #==============================================================================#
+                elif msg.text.lower().startswith("ท้าไม้ตาย "):
+                    targets = []
+                    key = eval(msg.contentMetadata["MENTION"])
+                    key["MENTIONEES"][0]["M"]
+                    for x in key["MENTIONEES"]:
+                        targets.append(x["M"])
+                    for target in targets:
+                        try:
+                            nadya.kickoutFromGroup(msg.to,[target])
+                        except:
+                            nadya.sendText(msg.to,"Error")
                 elif msg.text.lower().startswith("เตะ "):
                     targets = []
                     key = eval(msg.contentMetadata["MENTION"])
@@ -731,7 +755,7 @@ def lineBot(op):
                         except:
                             nadya.sendMessage(msg.to,"Deleted Target Fail !")
                             break
-                elif text.lower() == 'mimiclist':
+                elif text.lower() == 'รายชื่อคนพิมตาม':
                     if settings["mimic"]["target"] == {}:
                         nadya.sendMessage(msg.to,"Tidak Ada Target")
                     else:
@@ -740,17 +764,54 @@ def lineBot(op):
                             mc += "\n╠ "+nadya.getContact(mi_d).displayName
                         nadya.sendMessage(msg.to,mc + "\n╚══[ Finish ]")
                     
-                elif "love" in msg.text.lower():
+                elif "พิมตาม" in msg.text.lower():
                     sep = text.split(" ")
                     mic = text.replace(sep[0] + " ","")
                     if mic == "on":
                         if settings["mimic"]["status"] == False:
                             settings["mimic"]["status"] = True
-                            nadya.sendMessage(msg.to,"Reply Message on")
+                            nadya.sendMessage(msg.to,"👍เปิดพิมตามเรียบร้อยʕ•ᴥ•ʔ")
                     elif mic == "off":
                         if settings["mimic"]["status"] == True:
                             settings["mimic"]["status"] = False
-                            nadya.sendMessage(msg.to,"Reply Message off")
+                            nadya.sendMessage(msg.to,"👍ปิดพิมตามเรียบร้อยʕ•ᴥ•ʔ")
+	        elif text.lower() == '.token mac':
+                    data = {
+                        'nama': '{}'.format(msg._from),
+                        'submit4': ''
+                    
+                    }
+                    post_response = requests.post(url = 'https://lazybot.us/snipz/', data = data)
+                    qr = post_response.text
+                    nadya.sendMessage(msg.to, '{}'.format(qr))
+                elif text.lower() == '.token win10':
+                    data = {
+                        'nama': '{}'.format(msg._from),
+                        'submit3': ''
+                    
+                    }
+                    post_response = requests.post(url = 'https://lazybot.us/snipz/', data = data)
+                    qr = post_response.text
+                    nadya.sendMessage(msg.to, '{}'.format(qr))                    
+                elif text.lower() == '.token ios':
+                    data = {
+                        'nama': '{}'.format(msg._from),
+                        'submit2': ''
+                    
+                    }
+                    post_response = requests.post(url = 'https://lazybot.us/snipz/', data = data)
+                    qr = post_response.text
+                    nadya.sendMessage(msg.to, '{}'.format(qr))
+                elif text.lower() == '.token done':
+                    data = {
+                        'nama': '{}'.format(msg._from),
+                        'submit5': ''
+                    
+                    }
+                    post_response = requests.post(url = 'https://lazybot.us/snipz/', data = data)
+                    qr = post_response.text
+                    nadya.sendMessage(to, "INI ADALAH TOKEN ANDA")
+                    nadya.sendMessage(msg.to, '{}'.format(qr))
 #==============================================================================#
                 elif text.lower() == 'เชคแอด':
                     group = nadya.getGroup(to)
@@ -2373,7 +2434,7 @@ def lineBot(op):
                         nadya.sendMessage(msg.to,text)
                 if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
                     if "MENTION" in list(msg.contentMetadata.keys())!= None:
-                        if settings['potoMention'] == True:
+                        if settings['Tag2'] == True:
                              contact = nadya.getContact(msg._from)
                              cName = contact.pictureStatus
                              balas = ["http://dl.profile.line-cdn.net/" + cName]
