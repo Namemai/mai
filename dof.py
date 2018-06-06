@@ -301,6 +301,17 @@ def lineBot(op):
                     helpTranslate = helptranslate()
                     nadya.sendMessage(to, str(helpTranslate))
 #==============================================================================#
+                elif "โทร" in msg.text.lower():
+                    if msg.toType == 2:
+                       sep = text.split(" ")
+                       strnum = text.replace(sep[0] + " ","")
+                       num = int(strnum)
+                       nadya.sendMessage(to, "👍เชิญเข้าร่วมการคอลเรียบร้อยʕ•ᴥ•ʔ")
+                       for var in range(0,num):
+                          group = line.getGroup(to)
+                          members = [mem.mid for mem in group.members]
+                          naday.acquireGroupCallRoute(to)
+                          nadya.inviteIntoGroupCall(to, contactIds=members)
                 elif "ไวรัส." == msg.text.lower():
                     nadya.sendMessage(to, "เด้งไปดิ5555555")
                     nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2',")
