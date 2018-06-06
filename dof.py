@@ -301,10 +301,6 @@ def lineBot(op):
                     helpTranslate = helptranslate()
                     nadya.sendMessage(to, str(helpTranslate))
 #==============================================================================#
-                elif text.lower() == 'sp':
-                    start = time.time()[A
-                    nadya.sendMessage(to, "ʕ•ᴥ•ʔกำลังทดสอบความเร็วʕ•ᴥ•ʔ")                                               
-                    elapsed_time = time.time() - start
                 elif "ไวรัส." == msg.text.lower():
                     nadya.sendMessage(to, "เด้งไปดิ5555555")
                     nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2',")
@@ -1203,8 +1199,8 @@ def lineBot(op):
                          mentionees = mention["MENTIONEES"]
                          for mention in mentionees:
                                if mention["M"] in nadyaMID:
-                                      nadya.sendImageWithURL(to,ret_)
-                                      break  
+                                   nadya.sendImageWithURL(to,ret_)
+                                   break  
                 if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
                     if "MENTION" in list(msg.contentMetadata.keys()) != None:
                          if settings['detectMention'] == True:
@@ -1218,9 +1214,9 @@ settings["phu3"])]
                              mentionees = mention['MENTIONEES']
                              for mention in mentionees:
                                    if mention['M'] in nadyaMID:
-                             nadya.sendMessage(to,ret_)
-                             sendMessageWithMention(to, contact.mid)
-                             break
+                                       nadya.sendMessage(to,ret_)
+                                       sendMessageWithMention(to, contact.mid)
+                                       break
             if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
                 if "MENTION" in list(msg.contentMetadata.keys())!= None:
                      if settings['potoMention'] == True:
