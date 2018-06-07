@@ -451,7 +451,7 @@ def lineBot(op):
                     nadya.sendMessage(to, "👍เปิดระบบอ่านออโต้แล้วʕ•ᴥ•ʔ")
                 elif text.lower() == 'autoread off':
                     settings["autoRead"] = False
-                    nadya.sendMessage(to, "??ปิดระบบอ่านออโต้แล้วʕ•ᴥ•ʔ")
+                    nadya.sendMessage(to, "👎ปิดระบบอ่านออโต้แล้วʕ•ᴥ•ʔ")
                 elif text.lower() == 'checksticker on':
                     settings["checkSticker"] = True
                     nadya.sendMessage(to, "👍เปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
