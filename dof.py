@@ -1200,60 +1200,33 @@ def lineBot(op):
                     if text is not None:
                         nadya.sendMessage(msg.to,text)
                 if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
-                if "MENTION" in list(msg.contentMetadata.keys())!= None:
-                     if settings['potoMention'] == True:
-                         contact = nadya.getContact(msg._from)
-                         cName = contact.pictureStatus
-                         balas = ["http://dl.profile.line-cdn.net/" + cName]
-                         ret_ = random.choice(balas)
-                         mention = ast.literal_eval(msg.contentMetadata["MENTION"])
-                         mentionees = mention["MENTIONEES"]
-                         for mention in mentionees:
-                               if mention["M"] in nadyaMID:
-                                   nadya.sendImageWithURL(to,ret_)
-                                   break  
+                    if "MENTION" in list(msg.contentMetadata.keys())!= None:
+                        if settings['potoMention'] == True:
+                             contact = nadya.getContact(msg._from)
+                             cName = contact.pictureStatus
+                             balas = ["http://dl.profile.line-cdn.net/" + cName]
+                             ret_ = random.choice(balas)
+                             mention = ast.literal_eval(msg.contentMetadata["MENTION"])
+                             mentionees = mention["MENTIONEES"]
+                             for mention in mentionees:
+                                   if mention["M"] in nadyaMID:
+                                          nadya.sendImageWithURL(to,ret_)
+                                          break
                 if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
                     if "MENTION" in list(msg.contentMetadata.keys()) != None:
                          if settings['detectMention'] == True:
                              contact = nadya.getContact(msg._from)
                              cName = contact.displayName
-                             balas = [" " + str(
-settings["phu3"])]
+                             balas = ["ʕ•ᴥ•ʔแทคทำไมคับʕ•ᴥ•ʔ"]
                              ret_ = "" + random.choice(balas)
                              name = re.findall(r'@(\w+)', msg.text)
                              mention = ast.literal_eval(msg.contentMetadata["MENTION"])
                              mentionees = mention['MENTIONEES']
                              for mention in mentionees:
                                    if mention['M'] in nadyaMID:
-                                       nadya.sendMessage(to,ret_)
-                                       sendMessageWithMention(to, contact.mid)
-                                       break
-            if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
-                if "MENTION" in list(msg.contentMetadata.keys())!= None:
-                     if settings['potoMention'] == True:
-                        contact = nadya.getContact(msg._from)
-                        cName = contact.pictureStatus
-                        balas = ["http://dl.profile.line-cdn.net/" + cName]
-                        ret_ = random.choice(balas)
-                        mention = ast.literal_eval(msg.contentMetadata["MENTION"])
-                        mentionees = mention["MENTIONEES"]
-                        for mention in mentionees:
-                              if mention["M"] in nadyaMID:
-                                     nadya.sendImageWithURL(to,ret_)
-                                     break
-            if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
-                if 'MENTION' in msg.contentMetadata.keys()!= None:
-                    names = re.findall(r'@(\w+)', text)
-                    mention = ast.literal_eval(msg.contentMetadata['MENTION'])
-                    mentionees = mention['MENTIONEES']
-                    lists = []
-                    for mention in mentionees:
-                        if nadyaMID in mention["M"]:
-                            if settings["detectMention"] == True:
-                                contact = nadya.getContact(sender)
-                                nadya.sendMessage(to, "✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨")
-                                sendMessageWithMention(to, contact.mid)
-                            break
+                                          nadya.sendMessage(to,ret_)
+                                          sendMessageWithMention(to, contact.mid)
+                                          break
             if msg.text in ["Speed","speed","Sp","sp"]:
             	nadya.sendMessage(to, "👍แรงแล้วครับพี่ʕ•ᴥ•ʔ")
             if msg.text in ["Me","me","คท"]:
