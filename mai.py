@@ -75,7 +75,7 @@ def sendMessageWithMention(to, mid):
         logError(error)
         
 def helpmessage():
-    helpMessage = "✪〘เมนูคำสั่ง〙✪" + "\n" + \
+    helpMessage = ""✪〘เมนูคำสั่ง〙✪" + "\n" + \
                   "❇➠️ h1" + "\n" + \
                   "❇➠️ h2" + "\n" + \
                   "❇➠️ h3" + "\n" + \
@@ -124,10 +124,11 @@ def helpmessage():
                   "❇➠ แทค" + "\n" + \
                   "❇➠ นับ「Oɴ/Off/Reset」" + "\n" + \
                   "❇➠️ คนอ่าน" + "\n" + \
+		  " "
     return helpMessage
     
 def helptexttospeech():
-    helpTextToSpeech =   "       คำสั่ง2" + "\n" + \
+    helpTextToSpeech =   ""คำสั่ง2" + "\n" + \
                          "Tag 「On/Off」" + "\n" + \
                          "Tag2 「On/Off」" + "\n" + \
                          "AutoJoin 「On/Off」" + "\n" + \
