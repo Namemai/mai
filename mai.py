@@ -126,7 +126,7 @@ def helpmessage():
                   "❇➠ แทค" + "\n" + \
                   "❇➠ อ่าน「Oɴ/Off/Reset」" + "\n" + \
                   "❇➠️ คนอ่าน" + "\n" + \
-                  " " + "\n" + \
+                  " "
     return helpMessage
     
 def helptexttospeech():
