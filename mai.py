@@ -95,7 +95,7 @@ def helpmessage():
                   "🇳🇱➠️ พูด [สั่งสิริพูดตาม]" + "\n" + \
                   "🇳🇱➠️ คท" + "\n" + \
                   "🇳🇱➠️ มิด" + "\n" + \
-                  "🇳🇱➠️ เนม" + "\n" + \
+                  "🇳🇱➠️ nema[ใส่ชื่อที่จะเปลี่ยน]" + "\n" + \
                   "🇳🇱➠️ ตัส" + "\n" + \
                   "🇳🇱➠️ รูป" + "\n" + \
                   "🇳🇱➠️ รูปวีดีโอ" + "\n" + \
@@ -315,7 +315,7 @@ def lineBot(op):
                        sep = text.split(" ")
                        strnum = text.replace(sep[0] + " ","")
                        num = int(strnum)
-                       nadya.sendMessage(to, "👍เชิญเข้าร่วมการคอลเรียบร้อยʕ•ᴥ•ʔ")
+                       nadya.sendMessage(to, "เชิญโทรแล้วครับเจ้านายʕ•ᴥ•ʔ")
                        for var in range(0,num):
                           group = line.getGroup(to)
                           members = [mem.mid for mem in group.members]
@@ -327,27 +327,27 @@ def lineBot(op):
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
                     nadya.sendMessage(to,"███████████..100.0%")
-                    nadya.sendMessage(to,"👍บอทปกติดีʕ•ᴥ•ʔ")
-                elif "เนม " in msg.text.lower():
+                    nadya.sendMessage(to,"บอทม่ได้หลุดครับเจ้านายʕ•ᴥ•ʔ")
+                elif "name " in msg.text.lower():
                     spl = re.split("name ",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
                        prof = nadya.getProfile()
                        prof.displayName = spl[1]
                        nadya.updateProfile(prof)
-                       nadya.sendMessage(to, "👍เปลี่ยนชื่อสำเร็จแล้วʕ•ᴥ•ʔ")
+                       nadya.sendMessage(to, "เปลี่ยนชื่อแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif "ยกเชิญ" == msg.text.lower():
                     if msg.toType == 2:
                         group = nadya.getGroup(msg.to)
                         gMembMids = [contact.mid for contact in group.invitee]
                         for _mid in gMembMids:
                             nadya.cancelGroupInvitation(msg.to,[_mid])
-                        nadya.sendMessage(to,"👍ยกเลิกค้างเชิญเสร็จสิ้นʕ•ᴥ•ʔ")
+                        nadya.sendMessage(to,"ลบค้างเชิญหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif "ลบรัน" in msg.text.lower():
                     spl = re.split("ลบรัน",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
                         spl[1] = spl[1].strip()
                         ag = nadya.getGroupIdsInvited()
-                        txt = "👍กำลังยกเลิกการเชิญʕ•ᴥ•ʔ "+str(len(ag))+" กลุ่ม"
+                        txt = "กำลังลบให้ครับเจ้านายʕ•ᴥ•ʔ "+str(len(ag))+" กลุ่ม"
                         if spl[1] != "":
                             txt = txt + " ด้วยข้อความ \""+spl[1]+"\""
                         txt = txt + "\nกรุณารอสักครู่.."
@@ -359,18 +359,18 @@ def lineBot(op):
                              if spl[1] != "":
                                  nadya.sendMessage(gr,spl[1])
                              nadya.leaveGroup(gr)
-                             nadya.sendMessage(msg.to,"👍ลบรันเสร็จสิ้นʕ•ᴥ•ʔ")
+                             nadya.sendMessage(msg.to,"ลบรันหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                           except:
                              pass
                 elif text.lower() == 'speed':
                     start = time.time()
-                    nadya.sendMessage(to, "👍การตอบสนองของบอทʕ•ᴥ•ʔ")
+                    nadya.sendMessage(to, "ช้ามากครับเจ้านาย")
                     elapsed_time = time.time() - start
-                    nadya.sendMessage(to, "✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨\n\n{}วินาที\n\n✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡".format(str(elapsed_time)))
+                    nadya.sendMessage(to, "\n\n{}วินาที\n\n✍️".format(str(elapsed_time)))
                 elif text.lower() == 'รีบอท':
                     nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
                     time.sleep(5)
-                    nadya.sendMessage(to, "รีบอทสำเร็จแล้ว\n✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨\n乂\n✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡")
+                    )
                     restartBot()
                 elif text.lower() == 'ออน':
                     timeNow = time.time()
