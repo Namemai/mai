@@ -873,7 +873,7 @@ def lineBot(op):
                               pass
                         nadya.sendMessage(msg.to, "Delete reading point:\n" + readTime)
     
-                elif text.lower() == 'หาคนอ่าน':
+                elif text.lower() == 'คนอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
