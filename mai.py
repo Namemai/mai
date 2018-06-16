@@ -75,11 +75,12 @@ def sendMessageWithMention(to, mid):
         logError(error)
         
 def helpmessage():
-    helpMessage ="✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨" + "\n" + \
+    helpMessage ="  M A I" + "\n" + \
                   " " + "\n" + \
                   "✪〘เมนูคำสั่ง〙✪" + "\n" + \
-                  "❇➠️ คำสั่ง" + "\n" + \
-                  "❇➠️ คำสั่งการตั้งค่า" + "\n" + \
+                  "❇➠️ h1" + "\n" + \
+                  "❇➠️ h2" + "\n" + \
+                  "❇➠️ h3" + "\n" + \
                   " " + "\n" + \
                   "✪〘สเตตัส〙✪" + "\n" + \
                   "❇➠️ รีบอท" + "\n" + \
@@ -89,8 +90,8 @@ def helpmessage():
                   "❇➠️ ข้อมูล" + "\n" + \
                   "❇➠️ ลบรัน" + "\n" + \
                   "❇➠️ เทส" + "\n" + \
-                  "❇➠️ ยกเลิก" + "\n" + \
-                  "❇➠️ โทร" + "\n" + \
+                  "❇➠️ ยกเชิญ" + "\n" + \
+                  "❇➠️ เชิญโทร" + "\n" + \
                   "❇➠️ พูด [สั่งสิริพูดตาม]" + "\n" + \
                   "❇➠️ คท" + "\n" + \
                   "❇➠️ ไอดี" + "\n" + \
@@ -119,30 +120,29 @@ def helpmessage():
                   " " + "\n" + \
                   "✪〘คำสั่งอื่น〙✪" + "\n" + \
                   "❇➠️ พิมตาม「On/Off」" + "\n" + \
-                  "❇➠ รายชื่อคนพิมตาม" + "\n" + \
+                  "❇➠ รายชื่อพิมตาม" + "\n" + \
                   "❇➠️ เพิ่มพิมตาม「@คนอื่น」" + "\n" + \
                   "❇➠️ ลบพิมตาม「@คนอื่น」" + "\n" + \
                   "❇➠ แทค" + "\n" + \
-                  "❇➠ หาคนอ่าน「Oɴ/Off/Reset」" + "\n" + \
-                  "❇➠️ อ่าน" + "\n" + \
+                  "❇➠ อ่าน「Oɴ/Off/Reset」" + "\n" + \
+                  "❇➠️ คนอ่าน" + "\n" + \
                   " " + "\n" + \
-                  "✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡"
     return helpMessage
     
 def helptexttospeech():
-    helpTextToSpeech =   "✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨" + "\n" + \
-                         "👑Tag 「On/Off」" + "\n" + \
-                         "👑Tag2 「On/Off」" + "\n" + \
-                         "👑AutoJoin 「On/Off」" + "\n" + \
-                         "👑AutoRead「On/Off」" + "\n" + \
-                         "👑AutoBlock 「On/Off」" + "\n" + \
-                         "👑CheckSticker「On/Off」" + "\n" + \
-                         "👑AutoLeave 「On/Off」" + "\n" + \
-                         "✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡"
+    helpTextToSpeech =   "👉 คำสั่ง2👈" + "\n" + \
+                         "Tag 「On/Off」" + "\n" + \
+                         "Tag1 「On/Off」" + "\n" + \
+                         "AutoJoin 「On/Off」" + "\n" + \
+                         "AutoRead「On/Off」" + "\n" + \
+                         "AutoBlock 「On/Off」" + "\n" + \
+                         "CheckSticker「On/Off」" + "\n" + \
+                         "AutoLeave 「On/Off」" + "\n" + \
+                         " "
     return helpTextToSpeech
     
 def helptranslate():
-    helpTranslate =    "╔══[  ]" + "\n" + \
+    helpTranslate =    "╔══[ คำสั่งแปลภาษา ]" + "\n" + \
                        "╠ af : afrikaans" + "\n" + \
                        "╠ sq : albanian" + "\n" + \
                        "╠ am : amharic" + "\n" + \
@@ -249,7 +249,7 @@ def helptranslate():
                        "╠ zu : zulu" + "\n" + \
                        "╠ fil : Filipino" + "\n" + \
                        "╠ he : Hebrew" + "\n" + \
-                       "╚══[✍️  ᴛ⃢​ᴇ⃢​ᴀ⃢​ᴍ⃢   🔝ͲᎻᎬᖴ͙͛Ꮮ͙͛ᗩ͙͛ᔑ͙͛Ꮋ͙  ̾⚡]" + "\n" + "\n\n" + \
+                       "╚══[]" + "\n" + "\n\n" + \
                          "วิธีใช้ tr-ตามด้วยตัวย่อประเทศ\nเช่น tr-th สวัสดี เป็นต้น"
     return helpTranslate
 #==============================================================================#
@@ -290,17 +290,17 @@ def lineBot(op):
                 if text is None:
                     return
 #==============================================================================#
-                if text.lower() == 'คำสั่ง':
+                if text.lower() == 'h1':
                     helpMessage = helpmessage()
                     nadya.sendMessage(to, str(helpMessage))
-                elif text.lower() == 'คำสั่งการตั้งค่า':
+                elif text.lower() == 'h2':
                     helpTextToSpeech = helptexttospeech()
                     nadya.sendMessage(to, str(helpTextToSpeech))
-                elif text.lower() == 'คำสั่งแปล':
+                elif text.lower() == 'h3':
                     helpTranslate = helptranslate()
                     nadya.sendMessage(to, str(helpTranslate))
 #==============================================================================#
-                elif "โทร" in msg.text.lower():
+                elif "เชิญโทร" in msg.text.lower():
                     if msg.toType == 2:
                        sep = text.split(" ")
                        strnum = text.replace(sep[0] + " ","")
@@ -310,50 +310,29 @@ def lineBot(op):
                           group = line.getGroup(to)
                           members = [mem.mid for mem in group.members]
                           naday.acquireGroupCallRoute(to)
-                          nadya.inviteIntoGroupCall(to, contactIds=members)
                 elif "ทีมงาน" == msg.text.lower():
                     msg.contentType = 13
-                    nadya.sendMessage(to, "✍️ͲɆᎪᎷ🔝ʕ•̫͡•ʔஞ௮Ҩஆี✨")
-                    nadya.sendContact(to, "u07fb5496b409998a4f1f0af307d2c6e9")
-                    nadya.sendContact(to, "ua9ff83cd324d68d68952753f556c07c2")
-                    nadya.sendContact(to, "ua11927d673a2ae7bab9c737e4bd206d2")
-                    nadya.sendContact(to, "u348c962df7f329279de6d3441c339ea7")
-                    nadya.sendContact(to, "u0b1626389bd826a9244eae8154199411")
-                    nadya.sendContact(to, "ucd4e259cebb1a2180abfa3194488d829")
-                    nadya.sendContact(to, "u2ff74ee0d92f29ff31230b6ed17f3ea3")
-                    nadya.sendContact(to, "u9ed31efc986199adedb27386c9b1f458")
-                    nadya.sendContact(to, "u18ee09ce8fe2441a4c7ebd9b89ee105c")
-                    nadya.sendContact(to, "u1c062cf486253f0b3beea0fd50f1cbf4")
-                    nadya.sendContact(to, "uee2e76002980cfbc26528c371354dff6")
-                    nadya.sendContact(to, "ud5a5f662c48ac4cc9833c100a3fa9dd3")
+                    nadya.sendMessage(to,)
+                    nadya.sendContact(to,)
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
-                    nadya.sendMessage(to,"█▒... 10.0%")
-                    nadya.sendMessage(to,"██▒... 20.0%")
-                    nadya.sendMessage(to,"███▒... 30.0%")
-                    nadya.sendMessage(to,"████▒... 40.0%")
-                    nadya.sendMessage(to,"█████▒... 50.0%")
-                    nadya.sendMessage(to,"██████▒... 60.0%")
-                    nadya.sendMessage(to,"███████▒... 70.0%")
-                    nadya.sendMessage(to,"████████▒... 80.0%")
-                    nadya.sendMessage(to,"█████████▒... 90.0%")
                     nadya.sendMessage(to,"███████████..100.0%")
                     nadya.sendMessage(to,"👍บอทปกติดีʕ•ᴥ•ʔ")
-                elif "name " in msg.text.lower():
+                elif "เนม " in msg.text.lower():
                     spl = re.split("name ",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
                        prof = nadya.getProfile()
                        prof.displayName = spl[1]
                        nadya.updateProfile(prof)
                        nadya.sendMessage(to, "👍เปลี่ยนชื่อสำเร็จแล้วʕ•ᴥ•ʔ")
-                elif "ยกเลิก" == msg.text.lower():
+                elif "ยกเชิญ" == msg.text.lower():
                     if msg.toType == 2:
                         group = nadya.getGroup(msg.to)
                         gMembMids = [contact.mid for contact in group.invitee]
                         for _mid in gMembMids:
                             nadya.cancelGroupInvitation(msg.to,[_mid])
                         nadya.sendMessage(to,"👍ยกเลิกค้างเชิญเสร็จสิ้นʕ•ᴥ•ʔ")
-                elif "ลบรับ" in msg.text.lower():
+                elif "ลบรัน" in msg.text.lower():
                     spl = re.split("ลบรัน",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
                         spl[1] = spl[1].strip()
@@ -518,7 +497,7 @@ def lineBot(op):
                     nadya.sendContact(to, nadyaMID)
                 elif text.lower() == 'ไอดี':
                     nadya.sendMessage(msg.to, nadyaMID)
-                elif text.lower() == 'เนม':
+                elif text.lower() == 'มิด':
                     me = nadya.getContact(nadyaMID)
                     nadya.sendMessage(msg.to, me.displayName)
                 elif text.lower() == 'สถานะ':
@@ -649,7 +628,7 @@ def lineBot(op):
                 elif "Mc " in msg.text:
                     mmid = msg.text.replace("Mc ","")
                     nadya.sendContact(to, mmid)
-                elif msg.text.lower().startswith("เพิ่มพิมตาม "):
+                elif msg.text.lower().startswith("พิมตาม "):
                     targets = []
                     key = eval(msg.contentMetadata["MENTION"])
                     key["MENTIONEES"][0]["M"]
@@ -663,7 +642,7 @@ def lineBot(op):
                         except:
                             nadya.sendMessage(msg.to,"👍เพิ่มคนพิมตามแล้วʕ•ᴥ•ʔ")
                             break
-                elif msg.text.lower().startswith("ลบคนพิมตาม "):
+                elif msg.text.lower().startswith("ลบพิมตาม "):
                     targets = []
                     key = eval(msg.contentMetadata["MENTION"])
                     key["MENTIONEES"][0]["M"]
@@ -681,7 +660,7 @@ def lineBot(op):
                     if settings["mimic"]["target"] == {}:
                         nadya.sendMessage(msg.to,"👍ไม่มีเป้าหมายʕ•ᴥ•ʔ")
                     else:
-                        mc = "╔══[ หลายชื่อคนพิมตาม ]"
+                        mc = "╔══[ รายชื่อคนพิมตาม ]"
                         for mi_d in settings["mimic"]["target"]:
                             mc += "\n╠ "+nadya.getContact(mi_d).displayName
                         nadya.sendMessage(msg.to,mc + "\n╚══[ ทั้งหมด ]")
@@ -828,7 +807,7 @@ def lineBot(op):
                             txt += u'@Alin \n'
                         nadya.sendMessage(to, text=txt, contentMetadata={u'MENTION': json.dumps({'MENTIONEES':b})}, contentType=0)
                         nadya.sendMessage(to, "👍จำนวนสมาชิก {} คนʕ•ᴥ•ʔ".format(str(len(nama))))          
-                elif text.lower() == 'หาคนอ่าน on':
+                elif text.lower() == 'อ่าน on':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
@@ -870,7 +849,7 @@ def lineBot(op):
                             json.dump(read, fp, sort_keys=True, indent=4)
                             nadya.sendMessage(msg.to, "Set reading point:\n" + readTime)
                             
-                elif text.lower() == 'หาคนอ่าน off':
+                elif text.lower() == 'อ่าน off':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
@@ -894,7 +873,7 @@ def lineBot(op):
                               pass
                         nadya.sendMessage(msg.to, "Delete reading point:\n" + readTime)
     
-                elif text.lower() == 'หาคนซุ่ม reset':
+                elif text.lower() == 'หาคนอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
