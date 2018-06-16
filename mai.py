@@ -95,6 +95,7 @@ def helpmessage():
                   "🇳🇱➠️ พูด [สั่งสิริพูดตาม]" + "\n" + \
                   "🇳🇱➠️ คท" + "\n" + \
                   "🇳🇱➠️ มิด" + "\n" + \
+                  "🇳🇱➠️ ชื่อ" + "\n" + \
                   "🇳🇱➠️ nema[ใส่ชื่อที่จะเปลี่ยน]" + "\n" + \
                   "🇳🇱➠️ ตัส" + "\n" + \
                   "🇳🇱➠️ รูป" + "\n" + \
@@ -120,8 +121,8 @@ def helpmessage():
                   "🇳🇱➠️ รายชื่อคนในห้อง" + "\n" + \
                   " " + "\n" + \
                   "🔰〘คำสั่งอื่น〙🔰" + "\n" + \
-                  "🇳🇱➠️ เปิดพิมตาม" + "\n" + \
-                  "🇳🇱➠ ปิดพิมตาม" + "\n" + \
+                  "🇳🇱➠️ พิมตาม on " + "\n" + \
+                  "🇳🇱➠ พิมตาม off " + "\n" + \
                   "🇳🇱➠️ รายชื่อพิมตาม" + "\n" + \
                   "🇳🇱➠️ เพิ่มพิมตาม「@คนอื่น」" + "\n" + \
                   "🇳🇱➠️ ลบพิมตาม「@คนอื่น」" + "\n" + \
@@ -129,7 +130,8 @@ def helpmessage():
                   "🇳🇱➠ เปิดอ่าน" + "\n" + \
                   "🇳🇱➠️ ปิดอ่าน" + "\n" + \
                   "🇳🇱➠️ คนอ่าน" + "\n" + \
-                  " "
+                  "🇳🇱➠️ ลบเวลาอ่าน" + "\n" + \
+                  " " 
     return helpMessage
     
 def helptexttospeech():
@@ -503,7 +505,7 @@ def lineBot(op):
                             mi_d = contact.mid
                             nadya.sendContact(to, mi_d)
                 elif text.lower() == 'คท':
-                    sendMessageWithMention(to, nadyaMID)
+                    sendMessageWithMention(to,)
                     nadya.sendContact(to, nadyaMID)
                 elif text.lower() == 'มิด':
                     nadya.sendMessage(msg.to, nadyaMID)
@@ -1206,7 +1208,7 @@ def lineBot(op):
                          if settings['detectMention'] == True:
                              contact = nadya.getContact(msg._from)
                              cName = contact.displayName
-                             balas = ["ʕ•ᴥ•ʔแทคทำไมครับʕ•ᴥ•ʔ"]
+                             balas = ["ข้อความออโต้ 👉 มีอะไรทักแชทมาครับเจ้านาย"]
                              ret_ = "" + random.choice(balas)
                              name = re.findall(r'@(\w+)', msg.text)
                              mention = ast.literal_eval(msg.contentMetadata["MENTION"])
@@ -1214,7 +1216,7 @@ def lineBot(op):
                              for mention in mentionees:
                                    if mention['M'] in nadyaMID:
                                           nadya.sendMessage(to,ret_)
-                                          sendMessageWithMention(to, contact.mid)
+                                          sendMessageWithMention(to,)
                                           break
 #==============================================================================#
         if op.type == 55:
