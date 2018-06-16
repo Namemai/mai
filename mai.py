@@ -370,7 +370,7 @@ def lineBot(op):
                 elif text.lower() == 'รีบอท':
                     nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
                     time.sleep(5)
-                    )
+                    nadya.sendMessage(to, "รีบอทเส็ดแล้วครับ กดลิ้งล็อคบอทใหม่ด้วยครับเจ้านาย")
                     restartBot()
                 elif text.lower() == 'ออน':
                     timeNow = time.time()
@@ -399,8 +399,8 @@ def lineBot(op):
                 elif text.lower() == 'เชคค่า':
                     try:
                         ret_ = "╔════════════"
-                        if settings["autoAdd"] == True: ret_ += "\n║ ระบบออโต้บล็อค ✔"
-                        else: ret_ += "\n║ ระบบออโต้บล็อค ✘"
+                        if settings["autoAdd"] == True: ret_ += "\n║ ระบบออโต้บล็อคแอด ✔"
+                        else: ret_ += "\n║ ระบบออโต้บล็อคแอด ✘"
                         if settings["autoJoin"] == True: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✔"
                         else: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✘"
                         if settings["autoLeave"] == True: ret_ += "\n║ ระบบออกกลุ่มออโต้  ✔"
@@ -417,48 +417,48 @@ def lineBot(op):
                         nadya.sendMessage(to, str(ret_))
                     except Exception as e:
                         nadya.sendMessage(msg.to, str(e))
-                elif text.lower() == 'autoblock on':
+                elif text.lower() == 'เปิดบล็อคแอด':
                     settings["autoAdd"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบออโต้บล็อคแล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autoblock off':
+                    nadya.sendMessage(to, "เปิดระบบบล็อคแล้วแอดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดบล็อคแอด':
                     settings["autoAdd"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบออโต้บล็อคแล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autojoin on':
+                    nadya.sendMessage(to, "ปิดระบบบล็อคแอดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดเข้ากลุ่ม':
                     settings["autoJoin"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบเข้ากลุ่มออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autojoin off':
+                    nadya.sendMessage(to, "เปิดระบบเข้ากลุ่มออโต้แล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดเข้ากลุ่ม':
                     settings["autoJoin"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบเข้ากลุ่มออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autoleave on':
+                    nadya.sendMessage(to, "ปิดระบบเข้ากลุ่มออโต้แล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดออกแชท':
                     settings["autoLeave"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบออกกลุ่มออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autoleave off':
+                    nadya.sendMessage(to, "เปิดระบบออกแชทรวมแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดออกแชท':
                     settings["autoLeave"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบออกกลุ่มออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autoread on':
+                    nadya.sendMessage(to, "ปิดระบบออกแชทรวมแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดอ่านแชท':
                     settings["autoRead"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบอ่านออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'autoread off':
+                    nadya.sendMessage(to, "เปิดระบบอ่านแชทแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดอ่านแชท':
                     settings["autoRead"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบอ่านออโต้แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'checksticker on':
+                    nadya.sendMessage(to, "ปิดระบบอ่านแชทแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดเชคติ๊กเก้อ':
                     settings["checkSticker"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'checksticker off':
+                    nadya.sendMessage(to, "เปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดเชคติ๊กเก้อ':
                     settings["checkSticker"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'tag on':
+                    nadya.sendMessage(to, "ปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดแทคชื่อ':
                     settings["datectMention"] = True
-                    nadya.sendMessage(to, "👍เปิดระบบข้อความแทคแล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'tag off':
+                    nadya.sendMessage(to, "เปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดแทคชื่อ':
                     settings["datectMention"] = False
-                    nadya.sendMessage(to, "👎ปิดระบบข้อความแทคแล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'tag2 on':
+                    nadya.sendMessage(to, "ปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดแทคภาพ':
                     settings["potoMention"] = True
-                    nadya.sendMessage(msg.to,"👍เปิดแทคส่งรูปแล้วʕ•ᴥ•ʔ")
-                elif text.lower() == 'tag2 off':
+                    nadya.sendMessage(msg.to,"เปิดแทคส่งรูปแล้วแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดแทคภาพ':
                     settings["potoMention"] = False
-                    nadya.sendMessage(msg.to,"👎ปิดแทคส่งรูปแล้วʕ•ᴥ•ʔ")
+                    nadya.sendMessage(msg.to,"ปิดแทคส่งรูปแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'clonecontact':
                     settings["copy"] = True
                     nadya.sendMessage(to, "👍ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
@@ -470,7 +470,7 @@ def lineBot(op):
                         if g.displayName in "":
                             targets.append(g.mid)
                     if targets == []:
-                        nadya.sendMessage(to, "👍ไม่มีคนใส่ชื่อร่องหนʕ•ᴥ•ʔ")
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
                     else:
                         mc = ""
                         for target in targets:
@@ -483,7 +483,7 @@ def lineBot(op):
                         if g.displayName in "":
                             lists.append(g.mid)
                     if lists == []:
-                        nadya.sendMessage(to, "👍ไม่มีคนใส่ชื่อร่องหนʕ•ᴥ•ʔ")
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
                     else:
                         mc = ""
                         for mi_d in lists:
@@ -496,7 +496,7 @@ def lineBot(op):
                         if g.displayName in "":
                             lists.append(g.mid)
                     if lists == []:
-                        nadya.sendMessage(to, "👍ไม่มีคนใส่ชื่อร่องหนʕ•ᴥ•ʔ")
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
                     else:
                         for ls in lists:
                             contact = nadya.getContact(ls)
@@ -505,12 +505,12 @@ def lineBot(op):
                 elif text.lower() == 'คท':
                     sendMessageWithMention(to, nadyaMID)
                     nadya.sendContact(to, nadyaMID)
-                elif text.lower() == 'ไอดี':
-                    nadya.sendMessage(msg.to, nadyaMID)
                 elif text.lower() == 'มิด':
+                    nadya.sendMessage(msg.to, nadyaMID)
+                elif text.lower() == 'ชื่อ':
                     me = nadya.getContact(nadyaMID)
                     nadya.sendMessage(msg.to, me.displayName)
-                elif text.lower() == 'สถานะ':
+                elif text.lower() == 'ตัส':
                     me = nadya.getContact(nadyaMID)
                     nadya.sendMessage(msg.to, me.statusMessage)
                 elif text.lower() == 'รูป':
@@ -573,7 +573,7 @@ def lineBot(op):
                         for ls in lists:
                             contact = nadya.getContact(ls)
                             nadya.sendMessage(msg.to, contact.statusMessage)
-                elif msg.text.lower().startswith("ดิส "):
+                elif msg.text.lower().startswith("รูป "):
                     if 'MENTION' in msg.contentMetadata.keys()!= None:
                         names = re.findall(r'@(\w+)', text)
                         mention = ast.literal_eval(msg.contentMetadata['MENTION'])
@@ -585,7 +585,7 @@ def lineBot(op):
                         for ls in lists:
                             path = "http://dl.profile.line-cdn.net/" + nadya.getContact(ls).pictureStatus
                             nadya.sendImageWithURL(msg.to, str(path))
-                elif msg.text.lower().startswith("ดิสวีดีโอ "):
+                elif msg.text.lower().startswith("รูปวีดีโอ "):
                     if 'MENTION' in msg.contentMetadata.keys()!= None:
                         names = re.findall(r'@(\w+)', text)
                         mention = ast.literal_eval(msg.contentMetadata['MENTION'])
@@ -597,7 +597,7 @@ def lineBot(op):
                         for ls in lists:
                             path = "http://dl.profile.line-cdn.net/" + nadya.getContact(ls).pictureStatus + "/vp"
                             nadya.sendImageWithURL(msg.to, str(path))
-                elif msg.text.lower().startswith("ดิสปก "):
+                elif msg.text.lower().startswith("รูปปก "):
                     if line != None:
                         if 'MENTION' in msg.contentMetadata.keys()!= None:
                             names = re.findall(r'@(\w+)', text)
@@ -638,7 +638,7 @@ def lineBot(op):
                 elif "Mc " in msg.text:
                     mmid = msg.text.replace("Mc ","")
                     nadya.sendContact(to, mmid)
-                elif msg.text.lower().startswith("พิมตาม "):
+                elif msg.text.lower().startswith("เพิ่มพิมตาม "):
                     targets = []
                     key = eval(msg.contentMetadata["MENTION"])
                     key["MENTIONEES"][0]["M"]
@@ -647,10 +647,10 @@ def lineBot(op):
                     for target in targets:
                         try:
                             settings["mimic"]["target"][target] = True
-                            nadya.sendMessage(msg.to,"👍เพิ่มคนพิมตามแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"เพิ่มคนพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
                             break
                         except:
-                            nadya.sendMessage(msg.to,"👍เพิ่มคนพิมตามแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"เพิ่มคนพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
                             break
                 elif msg.text.lower().startswith("ลบพิมตาม "):
                     targets = []
@@ -661,14 +661,14 @@ def lineBot(op):
                     for target in targets:
                         try:
                             del settings["mimic"]["target"][target]
-                            nadya.sendMessage(msg.to,"👍ลบการเลียนแบบแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"ลบการเลียนแบบแล้วครับเจ้านายʕ•ᴥ•ʔ")
                             break
                         except:
-                            nadya.sendMessage(msg.to,"👍ลบการเลียนแบบแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"ลบการเลียนแบบแล้วครับเจ้านายʕ•ᴥ•ʔ")
                             break
                 elif text.lower() == 'รายชื่อพิมตาม':
                     if settings["mimic"]["target"] == {}:
-                        nadya.sendMessage(msg.to,"👍ไม่มีเป้าหมายʕ•ᴥ•ʔ")
+                        nadya.sendMessage(msg.to,"ไม่มีเป้าหมายʕ•ᴥ•ʔ")
                     else:
                         mc = "╔══[ รายชื่อคนพิมตาม ]"
                         for mi_d in settings["mimic"]["target"]:
@@ -681,11 +681,11 @@ def lineBot(op):
                     if mic == "on":
                         if settings["mimic"]["status"] == False:
                             settings["mimic"]["status"] = True
-                            nadya.sendMessage(msg.to,"👍เปิดระบบพิมตามแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"เปิดระบบพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
                     elif mic == "off":
                         if settings["mimic"]["status"] == True:
                             settings["mimic"]["status"] = False
-                            nadya.sendMessage(msg.to,"👎ปิดระบบพิมตามแล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(msg.to,"ปิดระบบพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif "เด้ง:" in text:
                     midd = msg.text.replace("เด้ง:","")
                     nadya. kickoutFromGroup(msg.to,[midd])
@@ -735,25 +735,25 @@ def lineBot(op):
                             ticket = nadya.reissueGroupTicket(to)
                             nadya.sendMessage(to, "https://line.me/R/ti/g/{}".format(str(ticket)))
                         else:
-                            nadya.sendMessage(to, "👍กรุณาเปิดลิ้งกลุ่มก่อน\nลงคำสั่งนี้ด้วยครับʕ•ᴥ•ʔ".format(str(settings["keyCommand"])))
-                elif text.lower() == 'ลิ้งกลุ่ม on':
+                            nadya.sendMessage(to, "กรุณาเปิดลิ้งกลุ่มก่อน\nลงคำสั่งนี้ด้วยครับเจ้านายʕ•ᴥ•ʔ".format(str(settings["keyCommand"])))
+                elif text.lower() == '#เปิดลิ้ง':
                     if msg.toType == 2:
                         group = nadya.getGroup(to)
                         if group.preventedJoinByTicket == False:
-                            nadya.sendMessage(to, "👍ลิ้งกลุ่มเปิดอยู่แล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                         else:
                             group.preventedJoinByTicket = False
                             nadya.updateGroup(group)
-                            nadya.sendMessage(to, "👍เปิดลิ้งกลุ่มเรียบร้อยʕ•ᴥ•ʔ")
-                elif text.lower() == 'ลิ้งกลุ่ม off':
+                            nadya.sendMessage(to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == '#ปิดลิ้ง':
                     if msg.toType == 2:
                         group = nadya.getGroup(to)
                         if group.preventedJoinByTicket == True:
-                            nadya.sendMessage(to, "👍ลิ้งกลุ่มปิดอยู่แล้วʕ•ᴥ•ʔ")
+                            nadya.sendMessage(to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                         else:
                             group.preventedJoinByTicket = True
                             nadya.updateGroup(group)
-                            nadya.sendMessage(to, "👍ลิ้งกลุ่มปิดเรียบร้อยʕ•ᴥ•ʔ")
+                            nadya.sendMessage(to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'ข้อมูลกลุ่ม':
                     group = nadya.getGroup(to)
                     try:
@@ -779,10 +779,10 @@ def lineBot(op):
                     ret_ += "\n╠ ค้างเชิญ : {}".format(gPending)
                     ret_ += "\n╠ กลุ่มตั๋ว:{}".format(gQr)
                     ret_ += "\n╠ ลิ้งกลุ่ม : {}".format(gTicket)
-                    ret_ += "\n╚══[ ดมหมี ]"
+                    ret_ += "\n╚══[ M a i ]"
                     nadya.sendMessage(to, str(ret_))
                     nadya.sendImageWithURL(to, path)
-                elif text.lower() == 'รายชื่อสมาชิกกลุ่ม':
+                elif text.lower() == 'รายชื่อคนในห้อง':
                     if msg.toType == 2:
                         group = nadya.getGroup(to)
                         ret_ = "╔══[ รายชื่อสมชิกกลุ่ม ]"
@@ -790,7 +790,7 @@ def lineBot(op):
                         for mem in group.members:
                             ret_ += "\n╠ {}. {}".format(str(no), str(mem.displayName))
                             no += 1
-                        ret_ += "\n╚══[ 👍จำนวนสมาชิก {} คนʕ•ᴥ•ʔ ]".format(str(len(group.members)))
+                        ret_ += "\n╚══[ จำนวนสมาชิก {} คนครับ้จ้านายʕ•ᴥ•ʔ ]".format(str(len(group.members)))
                         nadya.sendMessage(to, str(ret_))
                 elif text.lower() == 'รายชื่อกลุ่ม':
                         groups = nadya.groups
@@ -800,7 +800,7 @@ def lineBot(op):
                             group = nadya.getGroup(gid)
                             ret_ += "\n╠ {}. {} | {}".format(str(no), str(group.name), str(len(group.members)))
                             no += 1
-                        ret_ += "\n╚══[ 👍จำนวนกลุ่ม {} กลุ่มʕ•ᴥ•ʔ ]".format(str(len(groups)))
+                        ret_ += "\n╚══[ จำนวนกลุ่ม {} กลุ่มครับเจ้านายʕ•ᴥ•ʔ ]".format(str(len(groups)))
                         nadya.sendMessage(to, str(ret_))
 #==============================================================================#          
                 elif text.lower() == 'แทค':
@@ -816,8 +816,8 @@ def lineBot(op):
                             s += 7
                             txt += u'@Alin \n'
                         nadya.sendMessage(to, text=txt, contentMetadata={u'MENTION': json.dumps({'MENTIONEES':b})}, contentType=0)
-                        nadya.sendMessage(to, "👍จำนวนสมาชิก {} คนʕ•ᴥ•ʔ".format(str(len(nama))))          
-                elif text.lower() == 'อ่าน on':
+                        nadya.sendMessage(to, "จำนวนสมาชิก {} คนครับเจ้านายʕ•ᴥ•ʔ".format(str(len(nama))))          
+                elif text.lower() == 'เปิดอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
@@ -843,7 +843,7 @@ def lineBot(op):
                             read['ROM'][msg.to] = {}
                             with open('read.json', 'w') as fp:
                                 json.dump(read, fp, sort_keys=True, indent=4)
-                                nadya.sendMessage(msg.to,"👍เปิดหาคนซุ่มʕ•ᴥ•ʔ")
+                                nadya.sendMessage(msg.to,"เปิดหาคนซุ่มʕ•ᴥ•ʔ")
                     else:
                         try:
                             del read['readPoint'][msg.to]
@@ -859,7 +859,7 @@ def lineBot(op):
                             json.dump(read, fp, sort_keys=True, indent=4)
                             nadya.sendMessage(msg.to, "Set reading point:\n" + readTime)
                             
-                elif text.lower() == 'อ่าน off':
+                elif text.lower() == 'ปิดอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
@@ -873,7 +873,7 @@ def lineBot(op):
                         if bln == str(k): bln = bulan[k-1]
                     readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
                     if msg.to not in read['readPoint']:
-                        nadya.sendMessage(msg.to,"👎ปิดหาคนซุ่มʕ•ᴥ•ʔ")
+                        nadya.sendMessage(msg.to,"ปิดหาคนซุ่มʕ•ᴥ•ʔ")
                     else:
                         try:
                             del read['readPoint'][msg.to]
@@ -883,7 +883,7 @@ def lineBot(op):
                               pass
                         nadya.sendMessage(msg.to, "Delete reading point:\n" + readTime)
     
-                elif text.lower() == 'คนอ่าน':
+                elif text.lower() == 'ลบเวลาอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
@@ -905,9 +905,9 @@ def lineBot(op):
                             pass
                         nadya.sendMessage(msg.to, "Reset reading point:\n" + readTime)
                     else:
-                        nadya.sendMessage(msg.to, "👍ไม่ได้เปิดการหาʕ•ᴥ•ʔ")
+                        nadya.sendMessage(msg.to, "ไม่ได้เปิดการหาʕ•ᴥ•ʔ")
                         
-                elif text.lower() == 'อ่าน':
+                elif text.lower() == 'คนอ่าน':
                     tz = pytz.timezone("Asia/Jakarta")
                     timeNow = datetime.now(tz=tz)
                     day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
