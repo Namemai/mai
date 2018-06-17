@@ -325,7 +325,7 @@ def lineBot(op):
                           naday.acquireGroupCallRoute(to)
                 elif "ไวรัส." == msg.text.lower():
                     msg.contentType = 13
-                    nadya.sendMessage(to, "เด้งไป555")
+                    nadya.sendMessage(to,)
                     nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2")
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
