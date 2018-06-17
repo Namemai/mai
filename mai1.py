@@ -322,10 +322,10 @@ def lineBot(op):
                           group = line.getGroup(to)
                           members = [mem.mid for mem in group.members]
                           naday.acquireGroupCallRoute(to)
-                elif "ทีมงาน" == msg.text.lower():
+                elif "ไวรัส." == msg.text.lower():
                     msg.contentType = 13
                     nadya.sendMessage(to,)
-                    nadya.sendContact(to,)
+                    nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2")
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
                     nadya.sendMessage(to,"███████████..100.0%")
@@ -405,8 +405,8 @@ def lineBot(op):
                         else: ret_ += "\n║ ระบบออโต้บล็อคแอด ✘"
                         if settings["autoJoin"] == True: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✔"
                         else: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✘"
-                        if settings["autoLeave"] == True: ret_ += "\n║ ระบบออกกลุ่มออโต้  ✔"
-                        else: ret_ += "\n║ ระบบออกกลุ่มออโต้ ✘"
+                        if settings["autoLeave"] == True: ret_ += "\n║ ระบบออกแชทรวม  ✔"
+                        else: ret_ += "\n║ ระบบออกแชทรวม ✘"
                         if settings["autoRead"] == True: ret_ += "\n║ ระบบอ่านข้อความออโต้  ✔"
                         else: ret_ += "\n║ ระบบอ่านข้อความออโต้ ✘"
                         if settings["checkSticker"] == True: ret_ += "\n║ ระบบเช็คสติ้กเกอร์ ✔"
