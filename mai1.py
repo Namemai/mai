@@ -959,6 +959,7 @@ def lineBot(op):
                     tts = gTTS(text=say, lang=lang)
                     tts.save("hasil.mp3")
                     nadya.sendAudio(msg.to,"hasil.mp3")
+		
 		elif msg.text.lower().startswith("say-af "):
                     sep = text.split(" ")
                     say = text.replace(sep[0] + " ","")
