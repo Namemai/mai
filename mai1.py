@@ -1208,7 +1208,7 @@ def lineBot(op):
                          if settings['detectMention'] == True:
                              contact = nadya.getContact(msg._from)
                              cName = contact.displayName
-                             balas = ["ข้อความออโต้ 👉 มีอะไรทักแชทมาครับเจ้านาย"]
+                             balas = ["แทคทำมัยอะ มีไรหรอ"]
                              ret_ = "" + random.choice(balas)
                              name = re.findall(r'@(\w+)', msg.text)
                              mention = ast.literal_eval(msg.contentMetadata["MENTION"])
@@ -1216,7 +1216,7 @@ def lineBot(op):
                              for mention in mentionees:
                                    if mention['M'] in nadyaMID:
                                           nadya.sendMessage(to,ret_)
-                                          sendMessageWithMention(to, contact.mid)
+                                          sendMessageWithMention(to,)
                                           break
 #==============================================================================#
         if op.type == 55:
