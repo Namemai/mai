@@ -121,6 +121,7 @@ def helpmessage():
                   "🇳🇱➠️ รายชื่อคนในห้อง" + "\n" + \
                   " " + "\n" + \
                   "🔰〘คำสั่งอื่น〙🔰" + "\n" + \
+                  "🇳🇱➠️ เขียน [ใส่ข้อความ]" + "\n" + \
                   "🇳🇱➠️ พิมตาม on " + "\n" + \
                   "🇳🇱➠ พิมตาม off " + "\n" + \
                   "🇳🇱➠️ รายชื่อพิมตาม" + "\n" + \
@@ -959,6 +960,11 @@ def lineBot(op):
                     tts = gTTS(text=say, lang=lang)
                     tts.save("hasil.mp3")
                     nadya.sendAudio(msg.to,"hasil.mp3")
+		elif msg.text.lower().startswith("เขียน "):
+                    sep = msg.text.split(" ")
+                    textnya = msg.text.replace(sep[0] + " ","")
+                    urlnya = "http://chart.apis.google.com/chart?chs=480x80&cht=p3&chtt=" + textnya + "&chts=FFFFFF,70&chf=bg,s,000000"
+                    nadya.sendImageWithURL(msg.to, urlnya)
 #==============================================================================#   
                 elif text.lower() == 'ปฎิทิน':
                     tz = pytz.timezone("Asia/Makassar")
@@ -1218,9 +1224,6 @@ def lineBot(op):
                                           nadya.sendMessage(to,ret_)
                                           sendMessageWithMention(to,)
                                           break
-               if msg.text in ["555","55","5555"]
-                   nadya.sendMessage(to, "อารมดีจัง")
-
 #==============================================================================#
         if op.type == 55:
             print ("[ 55 ] NOTIFIED READ MESSAGE")
