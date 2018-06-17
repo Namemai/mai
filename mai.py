@@ -450,10 +450,10 @@ def lineBot(op):
                     settings["checkSticker"] = False
                     nadya.sendMessage(to, "ปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
                 elif text.lower() == 'เปิดแทคชื่อ':
-                    settings["datectMention"] = True
+                    settings["detectMention"] = True
                     nadya.sendMessage(to, "เปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'ปิดแทคชื่อ':
-                    settings["datectMention"] = False
+                    settings["detectMention"] = False
                     nadya.sendMessage(to, "ปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'เปิดแทคภาพ':
                     settings["potoMention"] = True
