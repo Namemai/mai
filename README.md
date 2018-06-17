@@ -1,4 +1,5 @@
 # mai
+
 pkg install git
 
 pkg install python
@@ -32,6 +33,12 @@ pip3 install humanfriendly
 pip3 install googletrans
 
 git clone https://github.com/Namemai/mai
+
+cd mai
+
+python3 mai1.py
+
+#======================================/===========#
 
 ลบข้อมูลรีใหม่ ลง rm -rf mai 
 
