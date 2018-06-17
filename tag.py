@@ -1225,6 +1225,12 @@ def lineBot(op):
                                           nadya.sendMessage(to,ret_)
                                           sendMessageWithMention(to,)
                                           break
+                if msg.text in ["maitag","แท็ค"):
+                    nadya.sendMessage(to, "แทค")
+                if msg.text in ["เปิดแทคชื่อ"]:
+                    nadya.sendMessage(to, "เปิดแทคชื่อ")
+                if msg.text in ["เปิดแทคภาพ"]:
+                    nadya.sendMessage(to, "เปิดแทคภาพ")
 #==============================================================================#
         if op.type == 55:
             print ("[ 55 ] NOTIFIED READ MESSAGE")
