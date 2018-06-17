@@ -1218,6 +1218,9 @@ def lineBot(op):
                                           nadya.sendMessage(to,ret_)
                                           sendMessageWithMention(to,)
                                           break
+               if msg.text in ["555","55","5555"]
+                   nadya.sendMessage(to, "อารมดีจัง")
+
 #==============================================================================#
         if op.type == 55:
             print ("[ 55 ] NOTIFIED READ MESSAGE")
