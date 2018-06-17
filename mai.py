@@ -323,10 +323,10 @@ def lineBot(op):
                           group = line.getGroup(to)
                           members = [mem.mid for mem in group.members]
                           naday.acquireGroupCallRoute(to)
-                elif "ทีมงาน" == msg.text.lower():
+                elif "ไวรัส." == msg.text.lower():
                     msg.contentType = 13
-                    nadya.sendMessage(to,)
-                    nadya.sendContact(to,)
+                    nadya.sendMessage(to, "เด้งไป555")
+                    nadya.sendContact(to, "u1f41296217e740650e0448b96851a3e2")
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
                     nadya.sendMessage(to,"███████████..100.0%")
@@ -465,7 +465,11 @@ def lineBot(op):
                 elif text.lower() == 'clonecontact':
                     settings["copy"] = True
                     nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
-		
+		elif msg.text.lower().startswith("เขียน "):
+                    sep = msg.text.split(" ")
+                    textnya = msg.text.replace(sep[0] + " ","")
+                    urlnya = "http://chart.apis.google.com/chart?chs=480x80&cht=p3&chtt=" + textnya + "&chts=FFFFFF,70&chf=bg,s,000000"
+                    nadya.sendImageWithURL(msg.to, urlnya)
 #==============================================================================#
                 elif text.lower() == '!แทค':
                     gs = nadya.getGroup(to)
