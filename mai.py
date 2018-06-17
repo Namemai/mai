@@ -329,7 +329,7 @@ def lineBot(op):
                 elif "เทส" == msg.text.lower():
                     nadya.sendMessage(to,"LOADING:▒...0%")
                     nadya.sendMessage(to,"███████████..100.0%")
-                    nadya.sendMessage(to,"บอทม่ได้หลุดครับเจ้านายʕ•ᴥ•ʔ")
+                    nadya.sendMessage(to,"บอทไม่ได้หลุดครับเจ้านายʕ•ᴥ•ʔ")
                 elif "name " in msg.text.lower():
                     spl = re.split("name ",msg.text,flags=re.IGNORECASE)
                     if spl[0] == "":
@@ -783,7 +783,7 @@ def lineBot(op):
                     ret_ += "\n╠ ลิ้งกลุ่ม : {}".format(gTicket)
                     ret_ += "\n╚══[ M a i ]"
                     nadya.sendMessage(to, str(ret_))
-                    nadya.sendImageWithURL(to, path)
+                    nadya.sendImageWithURL(to,)
                 elif text.lower() == 'รายชื่อคนในห้อง':
                     if msg.toType == 2:
                         group = nadya.getGroup(to)
