@@ -352,7 +352,7 @@ def lineBot(op):
                         ag = nadya.getGroupIdsInvited()
                         txt = "กำลังลบให้ครับเจ้านายʕ•ᴥ•ʔ "+str(len(ag))+" กลุ่ม"
                         if spl[1] != "":
-                            txt = txt + " ด้วยข้อความ \""+spl[1]+"\""
+                            txt = txt + " \""+spl[1]+"\""
                         txt = txt + "\nกรุณารอสักครู่.."
                         nadya.sendMessage(msg.to,txt)
                         procLock = len(ag)
