@@ -1225,7 +1225,7 @@ def lineBot(op):
                                           nadya.sendMessage(to,ret_)
                                           sendMessageWithMention(to,)
                                           break
-                if msg.text in ["maitag","แท็ค"]:
+                if msg.text in ["maitag","Maitag","แท็ค"]:
                     nadya.sendMessage(to, "แทค")
                 if msg.text in ["เปิดแทคชื่อ"]:
                     nadya.sendMessage(to, "เปิดแทคชื่อ")
