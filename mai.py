@@ -463,7 +463,7 @@ def lineBot(op):
                     nadya.sendMessage(msg.to,"ปิดแทคส่งรูปแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'clonecontact':
                     settings["copy"] = True
-                    nadya.sendMessage(to, "👍ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
+                    nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
 #==============================================================================#
                 elif text.lower() == '!แทค':
                     gs = nadya.getGroup(to)
@@ -505,7 +505,7 @@ def lineBot(op):
                             mi_d = contact.mid
                             nadya.sendContact(to, mi_d)
                 elif text.lower() == 'คท':
-                    sendMessageWithMention(to,)
+                    sendMessageWithMention(to, nadyaMID)
                     nadya.sendContact(to, nadyaMID)
                 elif text.lower() == 'มิด':
                     nadya.sendMessage(msg.to, nadyaMID)
@@ -1216,7 +1216,7 @@ def lineBot(op):
                              for mention in mentionees:
                                    if mention['M'] in nadyaMID:
                                           nadya.sendMessage(to,ret_)
-                                          sendMessageWithMention(to,)
+                                          sendMessageWithMention(to, contact.mid)
                                           break
 #==============================================================================#
         if op.type == 55:
