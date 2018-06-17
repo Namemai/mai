@@ -464,7 +464,12 @@ def lineBot(op):
                     nadya.sendMessage(msg.to,"ปิดแทคส่งรูปแล้วครับเจ้านายʕ•ᴥ•ʔ")
                 elif text.lower() == 'clonecontact':
                     settings["copy"] = True
-                    nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
+                    nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")x
+		elif msg.text.lower().startswith("Tx "):
+                    sep = msg.text.split(" ")
+                    textnya = msg.text.replace(sep[0] + " ","")
+                    urlnya = "http://chart.apis.google.com/chart?chs=480x80&cht=p3&chtt=" + textnya + "&chts=FFFFFF,70&chf=bg,s,000000"
+                    nadya.sendImageWithURL(msg.to, urlnya)
 #==============================================================================#
                 elif text.lower() == '!แทค':
                     gs = nadya.getGroup(to)
@@ -960,11 +965,6 @@ def lineBot(op):
                     tts = gTTS(text=say, lang=lang)
                     tts.save("hasil.mp3")
                     nadya.sendAudio(msg.to,"hasil.mp3")
-		elif msg.text.lower().startswith("เขียน "):
-                    sep = msg.text.split(" ")
-                    textnya = msg.text.replace(sep[0] + " ","")
-                    urlnya = "http://chart.apis.google.com/chart?chs=480x80&cht=p3&chtt=" + textnya + "&chts=FFFFFF,70&chf=bg,s,000000"
-                    nadya.sendImageWithURL(msg.to, urlnya)
 #==============================================================================#   
                 elif text.lower() == 'ปฎิทิน':
                     tz = pytz.timezone("Asia/Makassar")
