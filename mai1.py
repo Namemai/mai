@@ -1,1248 +1,2393 @@
-# - * - coding: utf-8 - * -
+# -*- coding: utf-8 -*-
 
-จากการนำเข้า  linepy *
-จาก datetime นำเข้า datetime
-จากการนอนหลับเข้าเวลา
-จากการนำเข้า BeautifulSoup bs4
-จากรูปแบบการนำเข้าที่เป็นมิตรต่อมนุษย์format_timespan, format_size, format_number, format_length
-เวลานำเข้า , สุ่ม, sys, json, ตัวแปลงสัญญาณ, threading, glob, อีกครั้ง, สตริง, os, การร้องขอ, กระบวนการย่อย, หก, ast, pytz, urllib, urllib.parse
-จาก GTT import gTTS
-จาก googletrans import Translator
-# =========================================== ============================= #
-botStart = time.time ()
+from linepy import *
+from datetime import datetime
+from time import sleep
+from bs4 import BeautifulSoup
+from humanfriendly import format_timespan, format_size, format_number, format_length
+import time, random, sys, json, codecs, threading, glob, re, string, os, requests, subprocess, six, ast, pytz, urllib, urllib.parse
+from gtts import gTTS
+from googletrans import Translator
+#==============================================================================#
+botStart = time.time()
 
-nadya = LINE ()
-# nadya = LINE ("TOKEN KAMU")
-# nadya = LINE ("อีเมล", "รหัสผ่าน")
-nadya.log ( " Auth Token: "  +  str (nadya.authToken))
-channelToken = nadya.getChannelResult ()
-nadya.log ( "ช่อง Token: "  +  STR ( ช่อง Token ))
+nadya = LINE()
+#nadya = LINE("TOKEN KAMU")
+#nadya = LINE("Email","Password")
+nadya.log("Auth Token : " + str(nadya.authToken))
+channelToken = nadya.getChannelResult()
+nadya.log("Channel Token : " + str(channelToken))
 
 nadyaMID = nadya.profile.mid
-nadyaProfile = nadya.getProfile ()
-lineSettings = nadya.getSettings ()
-oepoll = OEPoll (nadya)
-# =========================================== ============================= #
-readOpen = codecs.open ( " read.json " , " r " , " utf-8 " )
-settingsOpen = codecs.open ( " temp.json " , " r " , " utf-8 " )
+nadyaProfile = nadya.getProfile()
+lineSettings = nadya.getSettings()
+oepoll = OEPoll(nadya)
+#==============================================================================#
+readOpen = codecs.open("read.json","r","utf-8")
+settingsOpen = codecs.open("temp.json","r","utf-8")
 
-อ่าน= json.load (readOpen)
-settings = json.load (settingsOpen)
+read = json.load(readOpen)
+settings = json.load(settingsOpen)
 
 
 myProfile = {
-	" displayName " : " " ,
-	" statusMessage " : " " ,
-	" pictureStatus " : " "
+	"displayName": "",
+	"statusMessage": "",
+	"pictureStatus": ""
 }
 
-myProfile [ " displayName " ] = nadyaProfile.displayName
-myProfile [ " statusMessage " ] = nadyaProfile.statusMessage
-myProfile [ " pictureStatus " ] = nadyaProfile.pictureStatus
-# =========================================== ============================= #
-def  restartBot ():
-    พิมพ์ ( " [INFO] BET RESETTED " )
-    สำรองข้อมูล()
-#     time.sleep (3)
+myProfile["displayName"] = nadyaProfile.displayName
+myProfile["statusMessage"] = nadyaProfile.statusMessage
+myProfile["pictureStatus"] = nadyaProfile.pictureStatus
+#==============================================================================#
+def restartBot():
+    print ("[ INFO ] BOT RESETTED")
+    backupData()
+#    time.sleep(3)
     python = sys.executable
-    os.execl (หลาม, หลาม, * sys.argv)
+    os.execl(python, python, *sys.argv)
     
-def  backupData ():
-    ลอง :
+def backupData():
+    try:
         backup = settings
-        f = codecs.open ( ' temp.json ' , ' w ' , ' utf-8 ' )
-        json.dump (สำรอง f, sort_keys = True , indent = 4 , ensure_ascii = เท็จ )
+        f = codecs.open('temp.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
         backup = read
-        f = codecs.open ( ' read.json ' , ' w ' , ' utf-8 ' )
-        json.dump (สำรอง f, sort_keys = True , indent = 4 , ensure_ascii = เท็จ )
-        คืน จริง
-    ยกเว้น ข้อยกเว้น เป็นข้อผิดพลาด:
-        : ฟังก์ชัน LogError (ผิด)
-        กลับ เท็จ    
+        f = codecs.open('read.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
+        return True
+    except Exception as error:
+        logError(error)
+        return False    
     
-def  logError ( ข้อความ ):
-    nadya.log ( " [ERROR] "  +  STR (ข้อความ))
-    time_ = datetime.now ()
-    กับ open ( " errorLog.txt " , " a " ) เป็นข้อผิดพลาด:
-        error.write ( " \ n [ % s ] % s "  % ( str (เวลา), ข้อความ))
+def logError(text):
+    nadya.log("[ ERROR ] " + str(text))
+    time_ = datetime.now()
+    with open("errorLog.txt","a") as error:
+        error.write("\n[%s] %s" % (str(time), text))
         
-def  sendMessageWithMention ( เพื่อ , กลาง ):
-    ลอง :
-        aa =  ' {"S": "0", "E": "3", "M": ' + json.pumps (กลาง) + ' } '
-        text_ =  ' @x '
-        nadya.sendMessage (ไป text_, contentMetadata = { 'กล่าวถึง' : ' { "MENTIONEES": [ ' + AA + ' ]} ' } contentType = 0 )
-    ยกเว้น ข้อยกเว้น เป็นข้อผิดพลาด:
-        : ฟังก์ชัน LogError (ผิด)
+def sendMessageWithMention(to, mid):
+    try:
+        aa = '{"S":"0","E":"3","M":'+json.dumps(mid)+'}'
+        text_ = '@x '
+        nadya.sendMessage(to, text_, contentMetadata={'MENTION':'{"MENTIONEES":['+aa+']}'}, contentType=0)
+    except Exception as error:
+        logError(error)
         
-def  helpmessage ():
-    helpMessage = " ✡ MAI ✡ "  +  " \ n "  + \
-                  "  "  +  " \ n "  + \
-                  "เมนู +  คำสั่ง〙🔰 " + " \ n "  + \
-                  " 🇳🇱➠️ H1 "  +  " \ n "  + \
-                  " 🇳🇱➠️ H2 "  +  " \ n "  + \
-                  " H3 "  +  " \ n "  + \
-                  "  "  +  " \ n "  + \
-                  " 🔰〘สเตตัส〙🔰 "  +  " \ n "  + \
-                  " 🇳🇱➠️รีบอท"  +  " \ n "  + \
-                  " 🇳🇱➠️ออน"  +  " \ n "  + \
-                  "ความเร็ว🇳🇱➠️ "  +  " \ n "  + \
-                  " 🇳🇱➠️เชคค่า"  +  " \ n "  + \
-                  "ข้อมูล"  +  " \ n "  + \
-                  " 🇳🇱➠️ลบรัน"  +  " \ n "  + \
-                  " 🇳🇱➠️เทส"  +  " \ n "  + \
-                  "ยกยก"  +  " \ n "  + \
-                  " 🇳🇱➠️เชิญโทร"  +  " \ n "  + \
-                  " 🇳🇱➠️พูด [สั่งสิริพูดตาม] "  +  " \ n "  + \
-                  " 🇳🇱➠️คท"  +  " \ n "  + \
-                  " 🇳🇱➠️มิด"  +  " \ n "  + \
-                  " 🇳🇱➠️ชื่อ"  +  " \ n "  + \
-                  " 🇳🇱➠️ nema [ใส่ชื่อที่จะเปลี่ยน] "  +  " \ n "  + \
-                  " 🇳🇱➠️ตัส"  +  " \ n "  + \
-                  " 🇳🇱➠️รูป"  +  " \ n "  + \
-                  " 🇳🇱➠️รูปวีดีโอ"  +  " \ n "  + \
-                  "รูปปก"  +  " \ n "  + \
-                  "  "  +  " \ n "  + \
-                  " 🔰〘คนอื่น〙🔰 "  +  " \ n "  + \
-                  " 🇳🇱➠️รายชื่อกลุ่ม"  +  " \ n "  + \
-                  " 🇳🇱➠️คท「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠มิด「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️ชื่อ「 @ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠ตัส「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️ดิส「 @ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️เตะ「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️เด้ง「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️เชค"  +  " \ n "  + \
-                  " 🇳🇱➠️ไอดีกลุ่ม"  +  " \ n "  + \
-                  " 🇳🇱➠️ชื่อกลุ่ม"  +  " \ n "  + \
-                  "รูปกลุ่ม"  +  " \ n "  + \
-                  " 🇳🇱➠️ลิ้งกลุ่ม"  +  " \ n "  + \
-                  " # เปิดลิ้ง"  +  " \ n "  + \
-                  " # ปิดลิ้ง"  +  " \ n "  + \
-                  " 🇳🇱➠️รายชื่อคนในห้อง"  +  " \ n "  + \
-                  "  "  +  " \ n "  + \
-                  " 🔰〘คำสั่งอื่น〙🔰 "  +  " \ n "  + \
-                  " 🇳🇱➠️พิม ณ"  +  " \ n "  + \
-                  " 🇳🇱➠พิมตาม off "  +  " \ n "  + \
-                  " 🇳🇱➠️รายชื่อพิมตาม"  +  " \ n "  + \
-                  " 🇳🇱➠️เพิ่มพิมตาม「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠️ลบพิมตาม「@ คนอื่น」"  +  " \ n "  + \
-                  " 🇳🇱➠แทค"  +  " \ n "  + \
-                  "เปิดอ่าน"  +  " \ n "  + \
-                  "ปิดอ่าน"  +  " \ n "  + \
-                  "คนอ่าน"  +  " \ n "  + \
-                  " 🇳🇱➠️ลบเวลาอ่าน"  +  " \ n "  + \
-                  "  " 
-    helpMessage กลับ
+def helpmessage():
+    helpMessage =" ✡ M A I ✡" + "\n" + \
+                  " " + "\n" + \
+                  "🔰〘เมนูคำสั่ง〙🔰" + "\n" + \
+                  "🇳🇱➠️ H1" + "\n" + \
+                  "🇳🇱➠️ H2" + "\n" + \
+                  "🇳🇱➠️ H3" + "\n" + \
+                  " " + "\n" + \
+                  "🔰〘สเตตัส〙🔰" + "\n" + \
+                  "🇳🇱➠️ รีบอท" + "\n" + \
+                  "🇳🇱➠️ ออน" + "\n" + \
+                  "🇳🇱➠️ Speed" + "\n" + \
+                  "🇳🇱➠️ เชคค่า" + "\n" + \
+                  "🇳🇱➠️ ข้อมูล" + "\n" + \
+                  "🇳🇱➠️ ลบรัน" + "\n" + \
+                  "🇳🇱➠️ เทส" + "\n" + \
+                  "🇳🇱➠️ ยกเชิญ" + "\n" + \
+                  "🇳🇱➠️ เชิญโทร" + "\n" + \
+                  "🇳🇱➠️ พูด [สั่งสิริพูดตาม]" + "\n" + \
+                  "🇳🇱➠️ คท" + "\n" + \
+                  "🇳🇱➠️ มิด" + "\n" + \
+                  "🇳🇱➠️ ชื่อ" + "\n" + \
+                  "🇳🇱➠️ nema[ใส่ชื่อที่จะเปลี่ยน]" + "\n" + \
+                  "🇳🇱➠️ ตัส" + "\n" + \
+                  "🇳🇱➠️ รูป" + "\n" + \
+                  "🇳🇱➠️ รูปวีดีโอ" + "\n" + \
+                  "🇳🇱➠️ รูปปก" + "\n" + \
+                  " " + "\n" + \
+                  "🔰〘คนอื่น〙🔰" + "\n" + \
+                  "🇳🇱➠️ รายชื่อกลุ่ม" + "\n" + \
+                  "🇳🇱➠️ คท「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠ มิด「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ ชื่อ「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠ ตัส「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ ดิส「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ เตะ「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ เด้ง「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ เชคแอด" + "\n" + \
+                  "🇳🇱➠️ ไอดีกลุ่ม" + "\n" + \
+                  "🇳🇱➠️ ชื่อกลุ่ม" + "\n" + \
+                  "🇳🇱➠️ รูปกลุ่ม" + "\n" + \
+                  "🇳🇱➠️ ลิ้งกลุ่ม" + "\n" + \
+                  "🇳🇱➠ #เปิดลิ้ง" + "\n" + \
+                  "🇳🇱➠️ #ปิดลิ้ง" + "\n" + \
+                  "🇳🇱➠️ รายชื่อคนในห้อง" + "\n" + \
+                  " " + "\n" + \
+                  "🔰〘คำสั่งอื่น〙🔰" + "\n" + \
+                  "🇳🇱➠️ พิมตาม on " + "\n" + \
+                  "🇳🇱➠ พิมตาม off " + "\n" + \
+                  "🇳🇱➠️ รายชื่อพิมตาม" + "\n" + \
+                  "🇳🇱➠️ เพิ่มพิมตาม「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠️ ลบพิมตาม「@คนอื่น」" + "\n" + \
+                  "🇳🇱➠ แทค" + "\n" + \
+                  "🇳🇱➠ เปิดอ่าน" + "\n" + \
+                  "🇳🇱➠️ ปิดอ่าน" + "\n" + \
+                  "🇳🇱➠️ คนอ่าน" + "\n" + \
+                  "🇳🇱➠️ ลบเวลาอ่าน" + "\n" + \
+                  " " 
+    return helpMessage
     
-def  helptexttospeech ():
-    helpTextToSpeech =    " 🔰คำสั่ง 2 🔰 "  +  " \ n "  + \
-                         " 🔜เปิดแทคชื่อ"  +  " \ n "  + \
-                         " 🔜ปิดแทคชื่อ"  +  " \ n "  + \
-                         " 🔜เปิดแทคภาพ"  +  " \ n "  + \
-                         "ปิดการเขียนภาพ"  +  " \ n "  + \
-                         " 🔜เปิดเข้ากลุ่ม"  +  " \ n "  + \
-                         "เข้าสู่กลุ่ม"  +  " \ n "  + \
-                         "เปิดอ่าน"  +  " \ n "  + \
-                         "ปิดอ่านแชท"  +  " \ n "  + \
-                         " 🔜เปิดบล็อคแอด"  +  " \ n "  + \
-                         " 🔜ปิดบล็อคแอด"  +  " \ n "  + \
-                         " 🔜เปิดเชคติ๊กเก้อ"  +  " \ n "  + \
-                         " 🔜ปิดเชคติ๊กเก้อ"  +  " \ n "  + \
-                         "เปิดตัวแชท"  +  " \ n "  + \
-                         "ปิดการแชท"  +  " \ n "  + \
-                         "  "
+def helptexttospeech():
+    helpTextToSpeech =   "🔰 คำสั่ง2 🔰" + "\n" + \
+                         "🔜 เปิดแทคชื่อ" + "\n" + \
+                         "🔜 ปิดแทคชื่อ" + "\n" + \
+                         "🔜 เปิดแทคภาพ" + "\n" + \
+                         "🔜 ปิดแทคภาพ" + "\n" + \
+                         "🔜 เปิดเข้ากลุ่ม" + "\n" + \
+                         "🔜 ปิดเข้ากลุ่ม" + "\n" + \
+                         "🔜 เปิดอ่านแชท" + "\n" + \
+                         "🔜 ปิดอ่านแชท" + "\n" + \
+                         "🔜 เปิดบล็อคแอด" + "\n" + \
+                         "🔜 ปิดบล็อคแอด" + "\n" + \
+                         "🔜 เปิดเชคติ๊กเก้อ" + "\n" + \
+                         "🔜 ปิดเชคติ๊กเก้อ" + "\n" + \
+                         "🔜 เปิดออกแชท" + "\n" + \
+                         "🔜 ปิดออกแชท" + "\n" + \
+                         " "
     return helpTextToSpeech
     
-def  helptranslate ():
-    helpTranslate =     " ╔══ [คำสั่งแปลภาษา] "  +  " \ n "  + \
-                       " ╠ af: afrikaans "  +  " \ n "  + \
-                       " ╠ sq: albanian "  +  " \ n "  + \
-                       " ╠ am: amharic "  +  " \ n "  + \
-                       " ╠ ar: arabic "  +  " \ n "  + \
-                       " ╠ hy: armenian "  +  " \ n "  + \
-                       " ╠ az: azerbaijani "  +  " \ n "  + \
-                       " ╠ eu: basque "  +  " \ n "  + \
-                       " ╠ be: belarusian "  +  " \ n "  + \
-                       " ╠ bn: bengali "  +  " \ n "  + \
-                       " bs: bosnian "  +  " \ n "  + \
-                       " bg: bulgarian "  +  " \ n "  + \
-                       " ca: catalan "  +  " \ n "  + \
-                       " ╠ ceb: cebuano "  +  " \ n "  + \
-                       " ny: chichewa "  +  " \ n "  + \
-                       " ╠ zh-cn: chinese (simplified) "  +  " \ n "  + \
-                       " ╠ zh-tw: ภาษาจีน (ดั้งเดิม) "  +  " \ n "  + \
-                       " ╠ co: corsican "  +  " \ n "  + \
-                       " hr: croatian "  +  " \ n "  + \
-                       " cs: czech "  +  " \ n "  + \
-                       " ╠ da: danish "  +  " \ n "  + \
-                       " nl: ดัตช์"  +  " \ n "  + \
-                       " ╠ en: english "  +  " \ n "  + \
-                       " ╠ eo: esperanto "  +  " \ n "  + \
-                       " ╠เอต: estonian "  +  " \ n "  + \
-                       " ╠ tl: filipino "  +  " \ n "  + \
-                       " ╠ fi: finnish "  +  " \ n "  + \
-                       " ╠ fr: french "  +  " \ n "  + \
-                       " ╠ fy: frisian "  +  " \ n "  + \
-                       " ╠ gl: galician "  +  " \ n "  + \
-                       " ╠ ka: georgian "  +  " \ n "  + \
-                       " ╠เดอ: เจอร์แมน"  +  " \ n "  + \
-                       " ╠ el: greek "  +  " \ n "  + \
-                       " ╠ gu: gujarati "  +  " \ n "  + \
-                       " ╠ ht: haitian creole "  +  " \ n "  + \
-                       " ha: hausa "  +  " \ n "  + \
-                       " haw: hawaiian "  +  " \ n "  + \
-                       " ╠ iw: hebrew "  +  " \ n "  + \
-                       " ╠ hi: hindi "  +  " \ n "  + \
-                       " hmn: hmong "  +  " \ n "  + \
-                       " ╠ hu: hungarian "  +  " \ n "  + \
-                       " ╠คือไอซ์แลนด์"  +  " \ n "  + \
-                       " ╠ ig: igbo "  +  " \ n "  + \
-                       " ╠ id: indonesian "  +  " \ n "  + \
-                       " ╠ ga: irish "  +  " \ n "  + \
-                       " ╠ it: italian "  +  " \ n "  + \
-                       " ╠ ja: japanese "  +  " \ n "  + \
-                       " jw: javanese "  +  " \ n "  + \
-                       " ╠ kn: กั ณ ณาท"  +  " \ n "  + \
-                       " ╠ kk: kazakh "  +  " \ n "  + \
-                       " ╠กม.: khmer "  +  " \ n "  + \
-                       " ╠ ko: korean "  +  " \ n "  + \
-                       " ╠ ku: kurdish (kurmanji) "  +  " \ n "  + \
-                       " ╠ ky: kyrgyz "  +  " \ n "  + \
-                       " ╠ lo: lao "  +  " \ n "  + \
-                       " ╠ la: latin "  +  " \ n "  + \
-                       " lv: latvian "  +  " \ n "  + \
-                       " ╠ lt: lithuanian "  +  " \ n "  + \
-                       " lb: luxembourgish "  +  " \ n "  + \
-                       " mk: macedonian "  +  " \ n "  + \
-                       " mg: malagasy "  +  " \ n "  + \
-                       " ╠ ms: malay "  +  " \ n "  + \
-                       " ╠ ml: malayalam "  +  " \ n "  + \
-                       " mt: maltese "  +  " \ n "  + \
-                       " ╠ mi: maori "  +  " \ n "  + \
-                       " ╠ mr: marathi "  +  " \ n "  + \
-                       " ╠ mn: mongolian "  +  " \ n "  + \
-                       " ╠ฉัน: พม่า (พม่า) "  +  " \ n "  + \
-                       " ╠ ne: nepali "  +  " \ n "  + \
-                       " ╠ no: norwegian "  +  " \ n "  + \
-                       " ╠ ps: pashto "  +  " \ n "  + \
-                       " ╠ fa: persian "  +  " \ n "  + \
-                       " ╠ pl: polish "  +  " \ n "  + \
-                       " pt pt: portuguese "  +  " \ n "  + \
-                       " ╠ pa: punjabi "  +  " \ n "  + \
-                       " ╠ ro: romanian "  +  " \ n "  + \
-                       " ╠ ru: russian "  +  " \ n "  + \
-                       " ╠ sm: samoan "  +  " \ n "  + \
-                       " ╠ gd: scots gaelic "  +  " \ n "  + \
-                       " ╠ sr: serbian "  +  " \ n "  + \
-                       " ╠ st: sesotho "  +  " \ n "  + \
-                       " ╠ sn: shona "  +  " \ n "  + \
-                       " sd: sindhi "  +  " \ n "  + \
-                       " ╠ si: sinhala "  +  " \ n "  + \
-                       " ╠ sk: slovak "  +  " \ n "  + \
-                       " ╠ sl: สโลแกน"  +  " \ n "  + \
-                       " ╠ดังนั้น: somali "  +  " \ n "  + \
-                       " ╠ es: spanish "  +  " \ n "  + \
-                       " su: sundanese "  +  " \ n "  + \
-                       " ╠ sw: swahili "  +  " \ n "  + \
-                       " sv: szwedzki "  +  " \ n "  + \
-                       " ╠ tg: tajik "  +  " \ n "  + \
-                       " ╠ ta: tamil "  +  " \ n "  + \
-                       " ╠ Te: telugu "  +  " \ n "  + \
-                       " ╠ th: thai "  +  " \ n "  + \
-                       " ╠ tr: turkish "  +  " \ n "  + \
-                       " ╠ uk: ukrainian "  +  " \ n "  + \
-                       " ╠ ur: urdu "  +  " \ n "  + \
-                       " ╠ uz: uzbek "  +  " \ n "  + \
-                       " ╠ vi: vietnamese "  +  " \ n "  + \
-                       " cy: เวลส์"  +  " \ n "  + \
-                       " xh: xhosa "  +  " \ n "  + \
-                       " yi: yiddish "  +  " \ n "  + \
-                       " yo: yoruba "  +  " \ n "  + \
-                       " ╠ zu: zulu "  +  " \ n "  + \
-                       " ╠ fil: Filipino "  +  " \ n "  + \
-                       " ╠เขา: ฮีบรู"  +  " \ n "  + \
-                       " ╚══ [] "  +  " \ n "  +  " \ n \ n "  + \
-                         "วิธีใช้ tr- ตามด้วยตัวย่อประเทศ\ nเช่น tr-th สวัสดีเป็นต้น"
-    helpTranslate กลับ
-# =========================================== ============================= #
-def  lineBot ( op ):
-    ลอง :
-        ถ้า op.type ==  0 :
-            พิมพ์ ( " [0] END OF OPERATION " )
-            กลับ
-        ถ้า op.type ==  5 :
-            พิมพ์ ( " [5] NOTIFIED ADD CONTACT " )
-            ถ้าการตั้งค่า [ " autoAdd " ] ==  True :
-            	nadya.blockContact (op.param1)
-                # nadya.sendMessage (op.param1, "Halo {} เทอร์มินัลเทเลแม็กซ์ที่มีคำว่า saya sebagai teman: D" .format (str (nadya.getContact (op.param1) .displayName)))
-        if op.type ==  13 :
-            พิมพ์ ( " [13] เชิญชวนกลุ่ม" )
-            group = nadya.getGroup (op.param1)
-            ถ้าการตั้งค่า [ " autoJoin " ] ==  True :
-                nadya.acceptGroupInvitation (op.param1)
-        ถ้า op.type ==  24 :
-            พิมพ์ ( " [24] NOTAVED LEAVE ROOM " )
-            ถ้าการตั้งค่า [ " autoLeave " ] ==  True :
-                nadya.leaveRoom (op.param1)
-        ถ้า op.type ==  25 :
-            พิมพ์ ( " [25] ส่งข้อความ" )
+def helptranslate():
+    helpTranslate =    "╔══[ คำสั่งแปลภาษา ]" + "\n" + \
+                       "╠ af : afrikaans" + "\n" + \
+                       "╠ sq : albanian" + "\n" + \
+                       "╠ am : amharic" + "\n" + \
+                       "╠ ar : arabic" + "\n" + \
+                       "╠ hy : armenian" + "\n" + \
+                       "╠ az : azerbaijani" + "\n" + \
+                       "╠ eu : basque" + "\n" + \
+                       "╠ be : belarusian" + "\n" + \
+                       "╠ bn : bengali" + "\n" + \
+                       "╠ bs : bosnian" + "\n" + \
+                       "╠ bg : bulgarian" + "\n" + \
+                       "╠ ca : catalan" + "\n" + \
+                       "╠ ceb : cebuano" + "\n" + \
+                       "╠ ny : chichewa" + "\n" + \
+                       "╠ zh-cn : chinese (simplified)" + "\n" + \
+                       "╠ zh-tw : chinese (traditional)" + "\n" + \
+                       "╠ co : corsican" + "\n" + \
+                       "╠ hr : croatian" + "\n" + \
+                       "╠ cs : czech" + "\n" + \
+                       "╠ da : danish" + "\n" + \
+                       "╠ nl : dutch" + "\n" + \
+                       "╠ en : english" + "\n" + \
+                       "╠ eo : esperanto" + "\n" + \
+                       "╠ et : estonian" + "\n" + \
+                       "╠ tl : filipino" + "\n" + \
+                       "╠ fi : finnish" + "\n" + \
+                       "╠ fr : french" + "\n" + \
+                       "╠ fy : frisian" + "\n" + \
+                       "╠ gl : galician" + "\n" + \
+                       "╠ ka : georgian" + "\n" + \
+                       "╠ de : german" + "\n" + \
+                       "╠ el : greek" + "\n" + \
+                       "╠ gu : gujarati" + "\n" + \
+                       "╠ ht : haitian creole" + "\n" + \
+                       "╠ ha : hausa" + "\n" + \
+                       "╠ haw : hawaiian" + "\n" + \
+                       "╠ iw : hebrew" + "\n" + \
+                       "╠ hi : hindi" + "\n" + \
+                       "╠ hmn : hmong" + "\n" + \
+                       "╠ hu : hungarian" + "\n" + \
+                       "╠ is : icelandic" + "\n" + \
+                       "╠ ig : igbo" + "\n" + \
+                       "╠ id : indonesian" + "\n" + \
+                       "╠ ga : irish" + "\n" + \
+                       "╠ it : italian" + "\n" + \
+                       "╠ ja : japanese" + "\n" + \
+                       "╠ jw : javanese" + "\n" + \
+                       "╠ kn : kannada" + "\n" + \
+                       "╠ kk : kazakh" + "\n" + \
+                       "╠ km : khmer" + "\n" + \
+                       "╠ ko : korean" + "\n" + \
+                       "╠ ku : kurdish (kurmanji)" + "\n" + \
+                       "╠ ky : kyrgyz" + "\n" + \
+                       "╠ lo : lao" + "\n" + \
+                       "╠ la : latin" + "\n" + \
+                       "╠ lv : latvian" + "\n" + \
+                       "╠ lt : lithuanian" + "\n" + \
+                       "╠ lb : luxembourgish" + "\n" + \
+                       "╠ mk : macedonian" + "\n" + \
+                       "╠ mg : malagasy" + "\n" + \
+                       "╠ ms : malay" + "\n" + \
+                       "╠ ml : malayalam" + "\n" + \
+                       "╠ mt : maltese" + "\n" + \
+                       "╠ mi : maori" + "\n" + \
+                       "╠ mr : marathi" + "\n" + \
+                       "╠ mn : mongolian" + "\n" + \
+                       "╠ my : myanmar (burmese)" + "\n" + \
+                       "╠ ne : nepali" + "\n" + \
+                       "╠ no : norwegian" + "\n" + \
+                       "╠ ps : pashto" + "\n" + \
+                       "╠ fa : persian" + "\n" + \
+                       "╠ pl : polish" + "\n" + \
+                       "╠ pt : portuguese" + "\n" + \
+                       "╠ pa : punjabi" + "\n" + \
+                       "╠ ro : romanian" + "\n" + \
+                       "╠ ru : russian" + "\n" + \
+                       "╠ sm : samoan" + "\n" + \
+                       "╠ gd : scots gaelic" + "\n" + \
+                       "╠ sr : serbian" + "\n" + \
+                       "╠ st : sesotho" + "\n" + \
+                       "╠ sn : shona" + "\n" + \
+                       "╠ sd : sindhi" + "\n" + \
+                       "╠ si : sinhala" + "\n" + \
+                       "╠ sk : slovak" + "\n" + \
+                       "╠ sl : slovenian" + "\n" + \
+                       "╠ so : somali" + "\n" + \
+                       "╠ es : spanish" + "\n" + \
+                       "╠ su : sundanese" + "\n" + \
+                       "╠ sw : swahili" + "\n" + \
+                       "╠ sv : swedish" + "\n" + \
+                       "╠ tg : tajik" + "\n" + \
+                       "╠ ta : tamil" + "\n" + \
+                       "╠ te : telugu" + "\n" + \
+                       "╠ th : thai" + "\n" + \
+                       "╠ tr : turkish" + "\n" + \
+                       "╠ uk : ukrainian" + "\n" + \
+                       "╠ ur : urdu" + "\n" + \
+                       "╠ uz : uzbek" + "\n" + \
+                       "╠ vi : vietnamese" + "\n" + \
+                       "╠ cy : welsh" + "\n" + \
+                       "╠ xh : xhosa" + "\n" + \
+                       "╠ yi : yiddish" + "\n" + \
+                       "╠ yo : yoruba" + "\n" + \
+                       "╠ zu : zulu" + "\n" + \
+                       "╠ fil : Filipino" + "\n" + \
+                       "╠ he : Hebrew" + "\n" + \
+                       "╚══[]" + "\n" + "\n\n" + \
+                         "วิธีใช้ tr-ตามด้วยตัวย่อประเทศ\nเช่น tr-th สวัสดี เป็นต้น"
+    return helpTranslate
+#==============================================================================#
+def lineBot(op):
+    try:
+        if op.type == 0:
+            print ("[ 0 ] END OF OPERATION")
+            return
+        if op.type == 5:
+            print ("[ 5 ] NOTIFIED ADD CONTACT")
+            if settings["autoAdd"] == True:
+            	nadya.blockContact(op.param1)
+                #nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
+        if op.type == 13:
+            print ("[ 13 ] NOTIFIED INVITE GROUP")
+            group = nadya.getGroup(op.param1)
+            if settings["autoJoin"] == True:
+                nadya.acceptGroupInvitation(op.param1)
+        if op.type == 24:
+            print ("[ 24 ] NOTIFIED LEAVE ROOM")
+            if settings["autoLeave"] == True:
+                nadya.leaveRoom(op.param1)
+        if op.type == 25:
+            print ("[ 25 ] SEND MESSAGE")
             msg = op.message
             text = msg.text
             msg_id = msg.id
-            ผู้รับ= msg.to
-            ผู้ส่ง= msg._from
-            ถ้า msg.toType ==  0 :
-                ถ้าผู้ส่ง= nadya.profile.mid:
+            receiver = msg.to
+            sender = msg._from
+            if msg.toType == 0:
+                if sender != nadya.profile.mid:
                     to = sender
-                อื่น :
-                    ถึง=รับ
-            อื่น :
-                ถึง=รับ
-            ถ้า msg.contentType ==  0 :
-                ถ้าข้อความเป็น ไม่มี :
-                    กลับ
-# =========================================== ============================= #
-                ถ้า text.lower () ==  ' h1 ' :
-                    helpMessage = helpmessage ()
-                    nadya.sendMessage (ถึง, str (helpMessage))
-                elif text.lower () ==  ' h2 ' :
-                    helpTextToSpeech = helptexttospeech ()
-                    nadya.sendMessage (ถึง, str (helpTextToSpeech))
-                elif text.lower () ==  ' h3 ' :
-                    helpTranslate = helptranslate ()
-                    nadya.sendMessage (ถึง, str (helpTranslate))
-# =========================================== ============================= #
-                elif  "เชิญโทร" ใน msg.text.lower ():
-                    ถ้า msg.toType ==  2 :
-                       sep = text.split ( "  " )
-                       strnum = text.replace (sep [ 0 ] +  "  " , " " )
-                       num =  int (strnum)
-                       nadya.sendMessage (to, "เชิญโทรเลยครับเจ้านายʕ•ᴥ•ʔ " )
-                       สำหรับ var ใน ช่วง ( 0 , num):
-                          group = line.getGroup (to)
-                          members = [mem.mid สำหรับ mem ในกลุ่มสมาชิก]
-                          naday.acquireGroupCallRoute (เพื่อ)
-                elif  "ทีมงาน"  == msg.text.lower ():
-                    msg.contentType =  13
-                    nadya.sendMessage (เพื่อ)
-                    nadya.sendContact (เพื่อ)
-                elif  "เทส"  == msg.text.lower ():
-                    nadya.sendMessage (เป็น" LOADING: ▒ ... 0% " )
-                    nadya.sendMessage (to, " ███████████..100.0% " )
-                    nadya.sendMessage (to, "บอทม้ได้หลุดครับเจ้านายʕ•ᴥ•ʔ " )
-                elif  " name " ใน msg.text.lower ():
-                    spl = re.split ( " name " , msg.text, flags =ใหม่IGNORECASE )
-                    ถ้า spl [ 0 ] ==  " " :
-                       prof = nadya.getProfile ()
-                       prof.displayName = spl [ 1 ]
-                       nadya.updateProfile (ศ)
-                       nadya.sendMessage (to, "เปลี่ยนชื่อแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                elif  "ยกเชิญ"  == msg.text.lower ():
-                    ถ้า msg.toType ==  2 :
-                        กลุ่ม= nadya.getGroup (msg.to)
-                        gMembMids = [contact.mid สำหรับการติดต่อใน group.invitee]
-                        สำหรับ _mid ใน gMembMids:
-                            nadya.cancelGroupInvitation (msg.to [_ กลาง])
-                        nadya.sendMessage (to, "ลบหมดเชิญหมดแล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif  "ลบรัน" ใน msg.text.lower ():
-                    spl = re.split ( "ลบรัน" , msg.text, flags =ใหม่IGNORECASE )
-                    ถ้า spl [ 0 ] ==  " " :
-                        spl [ 1 ] = spl [ 1 ] .strip ()
-                        ag = nadya.getGroupIdsInvited ()
-                        txt =  "กำลังลบให้ครับเจ้านายʕ•ᴥ •ʔ " + STR ( len (AG)) + "กลุ่ม"
-                        ถ้า spl [ 1 ] ! =  " " :
-                            txt = txt +  "ด้วยข้อความ\" " + spl [ 1 ] + " \ " "
-                        txt = txt +  " \ nกรุณารอสักครู่ .. "
-                        nadya.sendMessage (msg.to, TXT)
-                        procLock =  len (ag)
-                        สำหรับ gr ใน ag:
-                          ลอง :
-                             nadya.acceptGroupInvitation (กรัม)
-                             ถ้า spl [ 1 ] ! =  " " :
-                                 nadya.sendMessage (gr, spl [ 1 ])
-                             nadya.leaveGroup (กรัม)
-                             nadya.sendMessage (msg.to, "ลบแล้วหมดเลย" เจ้านายʕ•ᴥ•ʔ " )
-                          ยกเว้น :
-                             ผ่านไป
-                elif text.lower () ==  'ความเร็ว' :
-                    เริ่มต้น= time.time ()
-                    nadya.sendMessage (to, "ช้ามากเลยเจ้านาย" )
-                    elapsed_time = time.time () -เริ่มต้น
-                    nadya.sendMessage (เพื่อ, " \ n \ n {}วินาที\ n \ n ✍️ " .format ( STR (ELAPSED_TIME)))
-                elif text.lower () ==  'รีบอท' :
-                    nadya.sendMessage (to, "กำลังรีบอทรอสักครู่ ..... " )
-                    time.sleep ( 5 )
-                    nadya.sendMessage (to, "รีบอทเส็กแล้วกดลิ้งล็อคบอทใหม่ด้วยครับเจซีย์" )
-                    restartBot ()
-                elif text.lower () ==  'ออน' :
-                    timeNow = time.time ()
+                else:
+                    to = receiver
+            else:
+                to = receiver
+            if msg.contentType == 0:
+                if text is None:
+                    return
+#==============================================================================#
+                if text.lower() == 'h1':
+                    helpMessage = helpmessage()
+                    nadya.sendMessage(to, str(helpMessage))
+                elif text.lower() == 'h2':
+                    helpTextToSpeech = helptexttospeech()
+                    nadya.sendMessage(to, str(helpTextToSpeech))
+                elif text.lower() == 'h3':
+                    helpTranslate = helptranslate()
+                    nadya.sendMessage(to, str(helpTranslate))
+#==============================================================================#
+                elif "เชิญโทร" in msg.text.lower():
+                    if msg.toType == 2:
+                       sep = text.split(" ")
+                       strnum = text.replace(sep[0] + " ","")
+                       num = int(strnum)
+                       nadya.sendMessage(to, "เชิญโทรแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                       for var in range(0,num):
+                          group = line.getGroup(to)
+                          members = [mem.mid for mem in group.members]
+                          naday.acquireGroupCallRoute(to)
+                elif "ทีมงาน" == msg.text.lower():
+                    msg.contentType = 13
+                    nadya.sendMessage(to,)
+                    nadya.sendContact(to,)
+                elif "เทส" == msg.text.lower():
+                    nadya.sendMessage(to,"LOADING:▒...0%")
+                    nadya.sendMessage(to,"███████████..100.0%")
+                    nadya.sendMessage(to,"บอทม่ได้หลุดครับเจ้านายʕ•ᴥ•ʔ")
+                elif "name " in msg.text.lower():
+                    spl = re.split("name ",msg.text,flags=re.IGNORECASE)
+                    if spl[0] == "":
+                       prof = nadya.getProfile()
+                       prof.displayName = spl[1]
+                       nadya.updateProfile(prof)
+                       nadya.sendMessage(to, "เปลี่ยนชื่อแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif "ยกเชิญ" == msg.text.lower():
+                    if msg.toType == 2:
+                        group = nadya.getGroup(msg.to)
+                        gMembMids = [contact.mid for contact in group.invitee]
+                        for _mid in gMembMids:
+                            nadya.cancelGroupInvitation(msg.to,[_mid])
+                        nadya.sendMessage(to,"ลบค้างเชิญหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif "ลบรัน" in msg.text.lower():
+                    spl = re.split("ลบรัน",msg.text,flags=re.IGNORECASE)
+                    if spl[0] == "":
+                        spl[1] = spl[1].strip()
+                        ag = nadya.getGroupIdsInvited()
+                        txt = "กำลังลบให้ครับเจ้านายʕ•ᴥ•ʔ "+str(len(ag))+" กลุ่ม"
+                        if spl[1] != "":
+                            txt = txt + " ด้วยข้อความ \""+spl[1]+"\""
+                        txt = txt + "\nกรุณารอสักครู่.."
+                        nadya.sendMessage(msg.to,txt)
+                        procLock = len(ag)
+                        for gr in ag:
+                          try:
+                             nadya.acceptGroupInvitation(gr)
+                             if spl[1] != "":
+                                 nadya.sendMessage(gr,spl[1])
+                             nadya.leaveGroup(gr)
+                             nadya.sendMessage(msg.to,"ลบรันหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                          except:
+                             pass
+                elif text.lower() == 'speed':
+                    start = time.time()
+                    nadya.sendMessage(to, "ช้ามากครับเจ้านาย")
+                    elapsed_time = time.time() - start
+                    nadya.sendMessage(to, "\n\n{}วินาที\n\n✍️".format(str(elapsed_time)))
+                elif text.lower() == 'รีบอท':
+                    nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
+                    time.sleep(5)
+                    nadya.sendMessage(to, "รีบอทเส็ดแล้วครับ กดลิ้งล็อคบอทใหม่ด้วยครับเจ้านาย")
+                    restartBot()
+                elif text.lower() == 'ออน':
+                    timeNow = time.time()
                     runtime = timeNow - botStart
-                    runtime = format_timespan (รันไทม์)
-                    nadya.sendMessage (to, " ʕ•ᴥ•ʔระยะเวลาการทำงานของบอทʕ•ᴥ•ʔ \ n {} " .format ( str (รันไทม์)))
-                elif text.lower () ==  'ข้อมูล' :
-                    ลอง :
+                    runtime = format_timespan(runtime)
+                    nadya.sendMessage(to, "ʕ•ᴥ•ʔระยะเวลาการทำงานของบอทʕ•ᴥ•ʔ\n{}".format(str(runtime)))
+                elif text.lower() == 'ข้อมูล':
+                    try:
                         arr = []
-                        owner =  " ude3230559bf63a55b9c28aa20ea194e3 "
-                        creator = nadya.getContact (เจ้าของ)
-                        contact = nadya.getContact (nadyaMID)
-                        grouplist = nadya.getGroupIdsJoined ()
-                        contactlist = nadya.getAllContactIds ()
-                        blockedlist = nadya.getBlockedContactIds ()
-                        ret_ =  " ╔══ [ข้อมูลดีดี] "
-                        ret_ + =  " \ nชื่อ: {} "รูปแบบ (contact.displayName)
-                        ret_ + =  " \ nกลุ่ม: {} "รูปแบบ ( str ( len (grouplist)))
-                        ret_ + =  " \ n ╠เพื่อน: {} "รูปแบบ ( str ( len (contactlist)))
-                        ret_ + =  " \ n ╠บล็อค: {} "รูปแบบ ( str ( len (บล็อค)))
-                        ret_ + =  " \ n ╚══ [ข้อมูลไอดีคุณ] "
-                        nadya.sendMessage (ถึง, str (ret_))
-                    ยกเว้น ข้อยกเว้น เช่น e:
-                        nadya.sendMessage (msg.to, str (e))
-# =========================================== ============================= #
-                elif text.lower () ==  'เชคค่า' :
-                    ลอง :
-                        ret_ =  " ╔════════════ "
-                        ถ้าการตั้งค่า [ " autoAdd " ] ==  True : ret_ + =  " \ nระบบ" ออโต้บรอนซ์แอด"
-                        อื่น : ret_ + =  " \ n ║ระบบออโต้บล็อคแอด✘ "
-                        ถ้าการตั้งค่า [ " autoJoin " ] ==  True : ret_ + =  " \ nระบบเข้ากลุ่มออโต้✔ "
-                        อื่น : ret_ + =  " \ nระบบเข้ากลุ่มออโต้✘ "
-                        ถ้าการตั้งค่า [ " autoLeave " ] ==  True : ret_ + =  " \ nระบบการออกกลุ่มออโต้✔ "
-                        อื่น : ret_ + =  " \ nระบบการออกกลุ่มออโต้✘ "
-                        ถ้าการตั้งค่า [ " autoRead " ] ==  จริง : ret_ + =  " \ n ║ระบบอ่านข้อความออโต้โต้✔ "
-                        อื่น : ret_ + =  " \ n ║ระบบอ่านข้อความออโต้โต้✘ "
-                        ถ้าการตั้งค่า [ " checksticker " ] ==  True : ret_ + =  " \ nเช็คระบบติ๊กกเกอร์✔ "
-                        อื่น : ret_ + =  " \ nระบบตรวจเช็คติ๋กเกอร์✘ "
-                        ถ้าการตั้งค่า [ " detectMention " ] == ความ จริง : ret_ + =  " \ nระบบข้อความแทค✔ "
-                        อื่น : ret_ + =  " \ n ║ระบบข้อความแทค✘ "
-                        ถ้าการตั้งค่า [ " detectMention " ] ==  จริง : ret_ + =  " \ n "ระบบแทคส่งรูป✔ "
-                        อื่น : ret_ + =  " \ n "ระบบแทคส่งรูป✘ "
-                        ret_ + =  " \ n ╚════════════ "
-                        nadya.sendMessage (ถึง, str (ret_))
-                    ยกเว้น ข้อยกเว้น เช่น e:
-                        nadya.sendMessage (msg.to, str (e))
-                elif text.lower () ==  'เปิดบล็อคแอด' :
-                    ตั้งค่า [ " autoAdd " ] =  True
-                    nadya.sendMessage (to, "เปิดระบบบล็อคแล้วแอดเดี๋ยวค่ะเจ้านายʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดบล็อคแอด' :
-                    การตั้งค่า [ " autoAdd " ] =  เท็จ
-                    nadya.sendMessage (to, "ปิดระบบบล็อคแอดแล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif text.lower () ==  'เปิดเข้ากลุ่ม' :
-                    การตั้งค่า [ " autoJoin " ] =  True
-                    nadya.sendMessage (to, "เปิดระบบเข้ากลุ่มออโต้แล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดเข้ากลุ่ม' :
-                    การตั้งค่า [ " autoJoin " ] =  เท็จ
-                    nadya.sendMessage (to, "ปิดระบบเข้ากลุ่มออโต้แล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif text.lower () ==  'เปิดแสงแชมพู' :
-                    ตั้งค่า [ " autoLeave " ] =  True
-                    nadya.sendMessage (to, "เปิดระบบแชทรวมแล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดออกแชท' :
-                    การตั้งค่า [ " autoLeave " ] =  เท็จ
-                    nadya.sendMessage (to, "ปิดระบบออกแชทรวมแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'เปิดอ่านแชท' :
-                    การตั้งค่า [ " autoRead " ] =  True
-                    nadya.sendMessage (to, "เปิดระบบอ่านแล้วไม่ได้เจ้านายʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดอ่านแชท' :
-                    การตั้งค่า [ " autoRead " ] =  เท็จ
-                    nadya.sendMessage (ไป"ปิดระบบอ่านแชทแล้วครับเจ้านาย ʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'เปิดเชคติ๊กเก้อ' :
-                    การตั้งค่า [ " checkSticker " ] =  True
-                    nadya.sendMessage (ไป"เปิดระบบเช็คสติ้กเกอร์แล้ว ʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดเชคติกเก้อ' :
-                    การตั้งค่า [ " checkSticker " ] =  เท็จ
-                    nadya.sendMessage (to, "ปิดระบบเช็คเช็คว่าถูกต้องหรือไม่?" )
-                elif text.lower () ==  'เปิดแทคชื่อ' :
-                    การตั้งค่า [ " datectMention " ] =  True
-                    nadya.sendMessage (to, "เปิดระบบข้อความแล้วค่อยๆเจสันไห่•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดแทคชื่อ' :
-                    การตั้งค่า [ " datectMention " ] =  เท็จ
-                    nadya.sendMessage (ไป"ปิดระบบข้อความแทคแล้วครับเจ้านาย ʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'เปิดแทคภาพ' :
-                    การตั้งค่า [ " potoMention " ] =  True
-                    nadya.sendMessage (msg.to, "เปิดแท๊กซี่แล้ว"เจสันไ่ห่ʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'ปิดแทคภาพ' :
-                    การตั้งค่า [ " potoMention " ] =  เท็จ
-                    nadya.sendMessage (msg.to, "ปิดแทร็ครูปแล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif text.lower () ==  ' clonecontact ' :
-                    ตั้งค่า [ " copy " ] =  True
-                    nadya.sendMessage (to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ " )
-# =========================================== ============================= #
-                elif text.lower () ==  ' ! แทค' :
-                    gs = nadya.getGroup (to)
-                    เป้าหมาย= []
-                    สำหรับ g ใน gs.members:
-                        ถ้า g.displayName ใน " " :
-                            targets.append (g.mid)
-                    ถ้าเป้าหมาย== []:
-                        nadya.sendMessage (to, "ไม่มีคนใส่ชื่อริงโทนหนอนไฝ่• " • " )
-                    อื่น :
-                        mc =  " "
-                        สำหรับเป้าหมายในเป้าหมาย:
-                            mc + = sendMessageWithMention (ไปยังเป้าหมาย) +  " \ n "
-                        nadya.sendMessage (ถึง, mc)
-                elif text.lower () ==  ' ! มิด' :
-                    gs = nadya.getGroup (to)
+                        owner = "ude3230559bf63a55b9c28aa20ea194e3"
+                        creator = nadya.getContact(owner)
+                        contact = nadya.getContact(nadyaMID)
+                        grouplist = nadya.getGroupIdsJoined()
+                        contactlist = nadya.getAllContactIds()
+                        blockedlist = nadya.getBlockedContactIds()
+                        ret_ = "╔══[ ข้อมูลไอดีคุณ ]"
+                        ret_ += "\n╠ ชื่อ : {}".format(contact.displayName)
+                        ret_ += "\n╠ กลุ่ม : {}".format(str(len(grouplist)))
+                        ret_ += "\n╠ เพื่อน : {}".format(str(len(contactlist)))
+                        ret_ += "\n╠ บล็อค : {}".format(str(len(blockedlist)))
+                        ret_ += "\n╚══[ ข้อมูลไอดีคุณ ]"
+                        nadya.sendMessage(to, str(ret_))
+                    except Exception as e:
+                        nadya.sendMessage(msg.to, str(e))
+#==============================================================================#
+                elif text.lower() == 'เชคค่า':
+                    try:
+                        ret_ = "╔════════════"
+                        if settings["autoAdd"] == True: ret_ += "\n║ ระบบออโต้บล็อคแอด ✔"
+                        else: ret_ += "\n║ ระบบออโต้บล็อคแอด ✘"
+                        if settings["autoJoin"] == True: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✔"
+                        else: ret_ += "\n║ ระบบเข้ากลุ่มออโต้ ✘"
+                        if settings["autoLeave"] == True: ret_ += "\n║ ระบบออกกลุ่มออโต้  ✔"
+                        else: ret_ += "\n║ ระบบออกกลุ่มออโต้ ✘"
+                        if settings["autoRead"] == True: ret_ += "\n║ ระบบอ่านข้อความออโต้  ✔"
+                        else: ret_ += "\n║ ระบบอ่านข้อความออโต้ ✘"
+                        if settings["checkSticker"] == True: ret_ += "\n║ ระบบเช็คสติ้กเกอร์ ✔"
+                        else: ret_ += "\n║ ระบบเช็คสติ้กเกอร์ ✘"
+                        if settings["detectMention"] == True: ret_ += "\n║ ระบบข้อความแทค ✔"
+                        else: ret_ += "\n║ ระบบข้อความแทค ✘"
+                        if settings["detectMention"] == True: ret_ += "\n║ ระบบแทคส่งรูป ✔"
+                        else: ret_ += "\n║ ระบบแทคส่งรูป ✘"
+                        ret_ += "\n╚════════════"
+                        nadya.sendMessage(to, str(ret_))
+                    except Exception as e:
+                        nadya.sendMessage(msg.to, str(e))
+                elif text.lower() == 'เปิดบล็อคแอด':
+                    settings["autoAdd"] = True
+                    nadya.sendMessage(to, "เปิดระบบบล็อคแล้วแอดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดบล็อคแอด':
+                    settings["autoAdd"] = False
+                    nadya.sendMessage(to, "ปิดระบบบล็อคแอดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดเข้ากลุ่ม':
+                    settings["autoJoin"] = True
+                    nadya.sendMessage(to, "เปิดระบบเข้ากลุ่มออโต้แล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดเข้ากลุ่ม':
+                    settings["autoJoin"] = False
+                    nadya.sendMessage(to, "ปิดระบบเข้ากลุ่มออโต้แล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดออกแชท':
+                    settings["autoLeave"] = True
+                    nadya.sendMessage(to, "เปิดระบบออกแชทรวมแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดออกแชท':
+                    settings["autoLeave"] = False
+                    nadya.sendMessage(to, "ปิดระบบออกแชทรวมแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดอ่านแชท':
+                    settings["autoRead"] = True
+                    nadya.sendMessage(to, "เปิดระบบอ่านแชทแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดอ่านแชท':
+                    settings["autoRead"] = False
+                    nadya.sendMessage(to, "ปิดระบบอ่านแชทแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดเชคติ๊กเก้อ':
+                    settings["checkSticker"] = True
+                    nadya.sendMessage(to, "เปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดเชคติ๊กเก้อ':
+                    settings["checkSticker"] = False
+                    nadya.sendMessage(to, "ปิดระบบเช็คสติ้กเกอร์แล้วʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดแทคชื่อ':
+                    settings["datectMention"] = True
+                    nadya.sendMessage(to, "เปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดแทคชื่อ':
+                    settings["datectMention"] = False
+                    nadya.sendMessage(to, "ปิดระบบข้อความแทคแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'เปิดแทคภาพ':
+                    settings["potoMention"] = True
+                    nadya.sendMessage(msg.to,"เปิดแทคส่งรูปแล้วแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ปิดแทคภาพ':
+                    settings["potoMention"] = False
+                    nadya.sendMessage(msg.to,"ปิดแทคส่งรูปแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'clonecontact':
+                    settings["copy"] = True
+                    nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
+#==============================================================================#
+                elif text.lower() == '!แทค':
+                    gs = nadya.getGroup(to)
+                    targets = []
+                    for g in gs.members:
+                        if g.displayName in "":
+                            targets.append(g.mid)
+                    if targets == []:
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
+                    else:
+                        mc = ""
+                        for target in targets:
+                            mc += sendMessageWithMention(to,target) + "\n"
+                        nadya.sendMessage(to, mc)
+                elif text.lower() == '!มิด':
+                    gs = nadya.getGroup(to)
                     lists = []
-                    สำหรับ g ใน gs.members:
-                        ถ้า g.displayName ใน " " :
-                            lists.append (g.mid)
-                    ถ้ารายการ== []:
-                        nadya.sendMessage (to, "ไม่มีคนใส่ชื่อริงโทนหนอนไฝ่• " • " )
-                    อื่น :
-                        mc =  " "
-                        สำหรับ mi_d ในรายการ:
-                            mc + =  " -> "  + mi_d +  " \ n "
-                        nadya.sendMessage (เพื่อ, MC)
-                elif text.lower () ==  ' ! คท' :
-                    gs = nadya.getGroup (to)
+                    for g in gs.members:
+                        if g.displayName in "":
+                            lists.append(g.mid)
+                    if lists == []:
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
+                    else:
+                        mc = ""
+                        for mi_d in lists:
+                            mc += "->" + mi_d + "\n"
+                        nadya.sendMessage(to,mc)
+                elif text.lower() == '!คท':
+                    gs = nadya.getGroup(to)
                     lists = []
-                    สำหรับ g ใน gs.members:
-                        ถ้า g.displayName ใน " " :
-                            lists.append (g.mid)
-                    ถ้ารายการ== []:
-                        nadya.sendMessage (to, "ไม่มีคนใส่ชื่อริงโทนหนอนไฝ่• " • " )
-                    อื่น :
-                        สำหรับ ls ในรายการ:
-                            contact = nadya.getContact (ls)
+                    for g in gs.members:
+                        if g.displayName in "":
+                            lists.append(g.mid)
+                    if lists == []:
+                        nadya.sendMessage(to, "ไม่มีคนใส่ชื่อร่องหนครับเจ้านายʕ•ᴥ•ʔ")
+                    else:
+                        for ls in lists:
+                            contact = nadya.getContact(ls)
                             mi_d = contact.mid
-                            nadya.sendContact (to, mi_d)
-                elif text.lower () ==  'คท' :
-                    sendMessageWithMention (เป็น nadyaMID)
-                    nadya.sendContact (to, nadyaMID)
-                elif text.lower () ==  'มิด' :
-                    nadya.sendMessage (msg.to, nadyaMID)
-                elif text.lower () ==  'ชื่อ' :
-                    ฉัน= nadya.getContact (nadyaMID)
-                    nadya.sendMessage (msg.to, me.displayName)
-                elif text.lower () ==  'ตัส' :
-                    ฉัน= nadya.getContact (nadyaMID)
-                    nadya.sendMessage (msg.to, me.statusMessage)
-                elif text.lower () ==  'รูป' :
-                    ฉัน= nadya.getContact (nadyaMID)
-                    nadya.sendImageWithURL (msg.to, " http://dl.profile.line-cdn.net/ "  + me.pictureStatus)
-                elif text.lower () ==  'รูปวีดีโอ' :
-                    ฉัน= nadya.getContact (nadyaMID)
-                    nadya.sendVideoWithURL (msg.to, " http://dl.profile.line-cdn.net/ "  + me.pictureStatus +  " / vp " )
-                elif text.lower () ==  'รูปปก' :
-                    ฉัน= nadya.getContact (nadyaMID)
-                    cover = nadya.getProfileCoverURL (nadyaMID)    
-                    nadya.sendImageWithURL (msg.to, cover)
-                elif msg.text.lower (). startswith ( "คท" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                            nadya.sendContact(to, mi_d)
+                elif text.lower() == 'คท':
+                    sendMessageWithMention(to, nadyaMID)
+                    nadya.sendContact(to, nadyaMID)
+                elif text.lower() == 'มิด':
+                    nadya.sendMessage(msg.to, nadyaMID)
+                elif text.lower() == 'ชื่อ':
+                    me = nadya.getContact(nadyaMID)
+                    nadya.sendMessage(msg.to, me.displayName)
+                elif text.lower() == 'ตัส':
+                    me = nadya.getContact(nadyaMID)
+                    nadya.sendMessage(msg.to, me.statusMessage)
+                elif text.lower() == 'รูป':
+                    me = nadya.getContact(nadyaMID)
+                    nadya.sendImageWithURL(msg.to,"http://dl.profile.line-cdn.net/" + me.pictureStatus)
+                elif text.lower() == 'รูปวีดีโอ':
+                    me = nadya.getContact(nadyaMID)
+                    nadya.sendVideoWithURL(msg.to,"http://dl.profile.line-cdn.net/" + me.pictureStatus + "/vp")
+                elif text.lower() == 'รูปปก':
+                    me = nadya.getContact(nadyaMID)
+                    cover = nadya.getProfileCoverURL(nadyaMID)    
+                    nadya.sendImageWithURL(msg.to, cover)
+                elif msg.text.lower().startswith("คท "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        สำหรับ ls ในรายการ:
-                            contact = nadya.getContact (ls)
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        for ls in lists:
+                            contact = nadya.getContact(ls)
                             mi_d = contact.mid
-                            nadya.sendContact (msg.to, mi_d)
-                elif msg.text.lower (). startswith ( "มิด" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                            nadya.sendContact(msg.to, mi_d)
+                elif msg.text.lower().startswith("มิด "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        ret_ =  " \ n "
-                        สำหรับ ls ในรายการ:
-                            ret_ + = ls
-                        nadya.sendMessage (msg.to, str (ret_))
-                elif msg.text.lower (). startswith ( "ชื่อ" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        ret_ = "\n"
+                        for ls in lists:
+                            ret_ += ls
+                        nadya.sendMessage(msg.to, str(ret_))
+                elif msg.text.lower().startswith("ชื่อ "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        สำหรับ ls ในรายการ:
-                            contact = nadya.getContact (ls)
-                            nadya.sendMessage (msg.to, contact.displayName)
-                elif msg.text.lower (). startswith ( "ตัส" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        for ls in lists:
+                            contact = nadya.getContact(ls)
+                            nadya.sendMessage(msg.to, contact.displayName)
+                elif msg.text.lower().startswith("ตัส "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        สำหรับ ls ในรายการ:
-                            contact = nadya.getContact (ls)
-                            nadya.sendMessage (msg.to, contact.statusMessage)
-                elif msg.text.lower (). startswith ( "รูป" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        for ls in lists:
+                            contact = nadya.getContact(ls)
+                            nadya.sendMessage(msg.to, contact.statusMessage)
+                elif msg.text.lower().startswith("รูป "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        สำหรับ ls ในรายการ:
-                            เส้นทาง=  " http://dl.profile.line-cdn.net/ "  + nadya.getContact (ls) .pictureStatus
-                            nadya.sendImageWithURL (msg.to, str (เส้นทาง))
-                elif msg.txt.lower (). startswith ( "รูปวีดีโอ" ):
-                    ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                        ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                        กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                        mentionees =พูดถึง [ ' MENTIONEES ' ]
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        for ls in lists:
+                            path = "http://dl.profile.line-cdn.net/" + nadya.getContact(ls).pictureStatus
+                            nadya.sendImageWithURL(msg.to, str(path))
+                elif msg.text.lower().startswith("รูปวีดีโอ "):
+                    if 'MENTION' in msg.contentMetadata.keys()!= None:
+                        names = re.findall(r'@(\w+)', text)
+                        mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                        mentionees = mention['MENTIONEES']
                         lists = []
-                        สำหรับการกล่าวถึงใน mentionees:
-                            ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                lists.append (พูดถึง [ " M " ])
-                        สำหรับ ls ในรายการ:
-                            เส้นทาง=  " http://dl.profile.line-cdn.net/ "  + nadya.getContact (ls) .pictureStatus +  " / vp "
-                            nadya.sendImageWithURL (msg.to, str (เส้นทาง))
-                elif msg.txt.lower (). startswith ( "รูปปก" ):
-                    ถ้าบรรทัด=  ไม่มี :
-                        ถ้า 'กล่าวถึง' ใน msg.contentMetadata.keys () =!  ไม่มี :
-                            ชื่อ= re.findall ( r ' @ ( \ w + ) 'ข้อความ)
-                            กล่าวถึง= ast.literal_eval (msg.contentMetadata [ 'กล่าวถึง' ])
-                            mentionees =พูดถึง [ ' MENTIONEES ' ]
+                        for mention in mentionees:
+                            if mention["M"] not in lists:
+                                lists.append(mention["M"])
+                        for ls in lists:
+                            path = "http://dl.profile.line-cdn.net/" + nadya.getContact(ls).pictureStatus + "/vp"
+                            nadya.sendImageWithURL(msg.to, str(path))
+                elif msg.text.lower().startswith("รูปปก "):
+                    if line != None:
+                        if 'MENTION' in msg.contentMetadata.keys()!= None:
+                            names = re.findall(r'@(\w+)', text)
+                            mention = ast.literal_eval(msg.contentMetadata['MENTION'])
+                            mentionees = mention['MENTIONEES']
                             lists = []
-                            สำหรับการกล่าวถึงใน mentionees:
-                                ถ้าพูดถึง [ " M " ] ไม่ อยู่ในรายการ:
-                                    lists.append (พูดถึง [ " M " ])
-                            สำหรับ ls ในรายการ:
-                                เส้นทาง=  " http://dl.profile.line-cdn.net/ "  + nadya.getProfileCoverURL (ls)
-                                nadya.sendImageWithURL (msg.to, str (เส้นทาง))
-                elif msg.text.lower (). startswith ( "ท้าไม้ตาย" ):
-                    เป้าหมาย= []
-                    ที่สำคัญ=  EVAL (msg.contentMetadata [ "กล่าวถึง" ])
-                    คีย์ [ " MENTIONEES " ] [ 0 ] [ " M " ]
-                    สำหรับ x ในคีย์ [ " MENTIONEES " ]:
-                        targets.append (x [ " M " ])
-                    สำหรับเป้าหมายในเป้าหมาย:
-                        ลอง :
-                            nadya.sendMessage (msg.to, " 2 นาฬิกาแฟร์เรอนแบบอุณหภูมิ 155 เซลเซียสแรงดันสูง 32 องศาเซลเซียส 22 นาฬิกาสำหรับใส่ผลึกเพื่อความหวัง .. " )
-                            nadya.kickoutFromGroup (msg.to [เป้าหมาย])
-                            nadya.sendMessage (msg.to, " !! แตกก" )
-                        ยกเว้น :
-                            nadya.sendText (msg.to, " Error " )
-                elif msg.txt.lower () startswith ( "เตะ" ):
-                    เป้าหมาย= []
-                    ที่สำคัญ=  EVAL (msg.contentMetadata [ "กล่าวถึง" ])
-                    คีย์ [ " MENTIONEES " ] [ 0 ] [ " M " ]
-                    สำหรับ x ในคีย์ [ " MENTIONEES " ]:
-                        targets.append (x [ " M " ])
-                    สำหรับเป้าหมายในเป้าหมาย:
-                        ลอง :
-                            nadya.kickoutFromGroup (msg.to [เป้าหมาย])
-                        ยกเว้น :
-                            nadya.sendText (msg.to, " Error " )
-# =========================================== ============================= #
-                elif  " Mc " ใน msg.text:
-                    mmid = msg.text.replace ( " Mc " , " " )
-                    nadya.sendContact (to, mmid)
-                elif msg.text.lower (). startswith ( "เพิ่มพิม" ):
-                    เป้าหมาย= []
-                    ที่สำคัญ=  EVAL (msg.contentMetadata [ "กล่าวถึง" ])
-                    คีย์ [ " MENTIONEES " ] [ 0 ] [ " M " ]
-                    สำหรับ x ในคีย์ [ " MENTIONEES " ]:
-                        targets.append (x [ " M " ])
-                    สำหรับเป้าหมายในเป้าหมาย:
-                        ลอง :
-                            การตั้งค่า [ "เลียนแบบ" ] [ "เป้าหมาย" ] [เป้าหมาย] =  จริง
-                            nadya.sendMessage (msg.to, "เพิ่มคนพิมตามแล้วครับเจ้านาย ʕ•ᴥ•ʔ " )
-                            หยุด
-                        ยกเว้น :
-                            nadya.sendMessage (msg.to, "เพิ่มคนพิมตามแล้วครับเจ้านาย ʕ•ᴥ•ʔ " )
-                            หยุด
-                elif msg.text.lower (). startswith ( "ลบพิมตาม" ):
-                    เป้าหมาย= []
-                    ที่สำคัญ=  EVAL (msg.contentMetadata [ "กล่าวถึง" ])
-                    คีย์ [ " MENTIONEES " ] [ 0 ] [ " M " ]
-                    สำหรับ x ในคีย์ [ " MENTIONEES " ]:
-                        targets.append (x [ " M " ])
-                    สำหรับเป้าหมายในเป้าหมาย:
-                        ลอง :
-                            ตั้งค่าdel [ "เลียนแบบ" ] [ "เป้าหมาย" ] [เป้าหมาย]
-                            nadya.sendMessage (msg.to, "ลบแบบเลียนแบบแล้วครับเจ้านาย" • " ᴥ " )
-                            หยุด
-                        ยกเว้น :
-                            nadya.sendMessage (msg.to, "ลบแบบเลียนแบบแล้วครับเจ้านาย" • " ᴥ " )
-                            หยุด
-                elif text.lower () ==  'รายชื่อพิมตาม' :
-                    ถ้าตั้งค่า [ "เลียนแบบ" ] [ " target " ] == {}:
-                        nadya.sendMessage (msg.to, "ไม่มีเป้าหมายʕ•ᴥ•ʔ " )
-                    อื่น :
-                        mc =  " ╔══ [รายชื่อคนพิมตาม] "
-                        สำหรับ mi_d ในการตั้งค่า [ "เลียนแบบ" ] [ " target " ]:
-                            mc + =  " \ n ╠ " + nadya.getContact (mi_d) .displayName
-                        nadya.sendMessage (msg.to, mc +  " \ n ╚══ [ทั้งหมด] " )
+                            for mention in mentionees:
+                                if mention["M"] not in lists:
+                                    lists.append(mention["M"])
+                            for ls in lists:
+                                path = "http://dl.profile.line-cdn.net/" + nadya.getProfileCoverURL(ls)
+                                nadya.sendImageWithURL(msg.to, str(path))
+                elif msg.text.lower().startswith("ท้าไม้ตาย "):
+                    targets = []
+                    key = eval(msg.contentMetadata["MENTION"])
+                    key["MENTIONEES"][0]["M"]
+                    for x in key["MENTIONEES"]:
+                        targets.append(x["M"])
+                    for target in targets:
+                        try:
+                            nadya.sendMessage(msg.to,"2นาฬิกาฟาเรนไฮต์อุณหภูมิ155เซลเซียสแรงปืน32อุณหภูมิความชื้น22นาฬิกาปาดขวายิงเพื่อหวังผล..")
+                            nadya.kickoutFromGroup(msg.to,[target])
+                            nadya.sendMessage(msg.to,"!!แตกก")
+                        except:
+                            nadya.sendText(msg.to,"Error")
+                elif msg.text.lower().startswith("เตะ "):
+                    targets = []
+                    key = eval(msg.contentMetadata["MENTION"])
+                    key["MENTIONEES"][0]["M"]
+                    for x in key["MENTIONEES"]:
+                        targets.append(x["M"])
+                    for target in targets:
+                        try:
+                            nadya.kickoutFromGroup(msg.to,[target])
+                        except:
+                            nadya.sendText(msg.to,"Error")
+#==============================================================================#
+                elif "Mc " in msg.text:
+                    mmid = msg.text.replace("Mc ","")
+                    nadya.sendContact(to, mmid)
+                elif msg.text.lower().startswith("เพิ่มพิมตาม "):
+                    targets = []
+                    key = eval(msg.contentMetadata["MENTION"])
+                    key["MENTIONEES"][0]["M"]
+                    for x in key["MENTIONEES"]:
+                        targets.append(x["M"])
+                    for target in targets:
+                        try:
+                            settings["mimic"]["target"][target] = True
+                            nadya.sendMessage(msg.to,"เพิ่มคนพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                            break
+                        except:
+                            nadya.sendMessage(msg.to,"เพิ่มคนพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                            break
+                elif msg.text.lower().startswith("ลบพิมตาม "):
+                    targets = []
+                    key = eval(msg.contentMetadata["MENTION"])
+                    key["MENTIONEES"][0]["M"]
+                    for x in key["MENTIONEES"]:
+                        targets.append(x["M"])
+                    for target in targets:
+                        try:
+                            del settings["mimic"]["target"][target]
+                            nadya.sendMessage(msg.to,"ลบการเลียนแบบแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                            break
+                        except:
+                            nadya.sendMessage(msg.to,"ลบการเลียนแบบแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                            break
+                elif text.lower() == 'รายชื่อพิมตาม':
+                    if settings["mimic"]["target"] == {}:
+                        nadya.sendMessage(msg.to,"ไม่มีเป้าหมายʕ•ᴥ•ʔ")
+                    else:
+                        mc = "╔══[ รายชื่อคนพิมตาม ]"
+                        for mi_d in settings["mimic"]["target"]:
+                            mc += "\n╠ "+nadya.getContact(mi_d).displayName
+                        nadya.sendMessage(msg.to,mc + "\n╚══[ ทั้งหมด ]")
                     
-                elif  "พิมตาม" ใน msg.txt.lower ():
-                    sep = text.split ( "  " )
-                    mic = text.replace (sep [ 0 ] +  "  " , " " )
-                    ถ้า mic ==  " on " :
-                        ถ้าตั้งค่า [ "เลียนแบบ" ] [ "สถานะ" ] ==  เท็จ :
-                            ตั้งค่า [ "เลียนแบบ" ] [ "สถานะ" ] =  จริง
-                            nadya.sendMessage (msg.to, "เปิดระบบพิมพ์แล้วครับเจ้านาย" • " ᴥ•ʔ " )
-                    elif mic ==  "ปิด" :
-                        ถ้าตั้งค่า [ "เลียนแบบ" ] [ "สถานะ" ] ==  จริง :
-                            ตั้งค่า [ "เลียนแบบ" ] [ "สถานะ" ] =  เท็จ
-                            nadya.sendMessage (msg.to, "ปิดระบบพิมพ์แล้วครับเจสันไ¸•ᴥ•ʔ " )
-                elif  "เด้ง: " ในข้อความ:
-                    midd = msg.text.replace ( "เด้ง: " , " " )
-                    Nadya kickoutFromGroup (msg.to [midd])
-                    Nadya findAndAddContactsByMid (midd)
-                    nadya.inviteIntoGroup (msg.to [midd])
-                    nadya.cancelGroupInvitation (msg.to [midd])
-                elif  "เด้ง" ใน msg.text:
-                        vkick0 = msg.text.replace ( "เด้ง" , " " )
-                        vkick1 = vkick0.rstrip ()
-                        vkick2 = vkick1.replace ( " @ " , " " )
-                        vkick3 = vkick2.rstrip ()
+                elif "พิมตาม" in msg.text.lower():
+                    sep = text.split(" ")
+                    mic = text.replace(sep[0] + " ","")
+                    if mic == "on":
+                        if settings["mimic"]["status"] == False:
+                            settings["mimic"]["status"] = True
+                            nadya.sendMessage(msg.to,"เปิดระบบพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                    elif mic == "off":
+                        if settings["mimic"]["status"] == True:
+                            settings["mimic"]["status"] = False
+                            nadya.sendMessage(msg.to,"ปิดระบบพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif "เด้ง:" in text:
+                    midd = msg.text.replace("เด้ง:","")
+                    nadya. kickoutFromGroup(msg.to,[midd])
+                    nadya. findAndAddContactsByMid(midd)
+                    nadya.inviteIntoGroup(msg.to,[midd])
+                    nadya.cancelGroupInvitation(msg.to,[midd])
+                elif "เด้ง " in msg.text:
+                        vkick0 = msg.text.replace("เด้ง ","")
+                        vkick1 = vkick0.rstrip()
+                        vkick2 = vkick1.replace("@","")
+                        vkick3 = vkick2.rstrip()
                         _name = vkick3
-                        gs = nadya.getGroup (msg.to)
-                        เป้าหมาย= []
-                        สำหรับ s ใน gs.members:
-                            ถ้า _name ใน s.displayName:
-                                targets.append (s.mid)
-                        ถ้าเป้าหมาย== []:
-                            ผ่านไป
-                        อื่น :
-                            สำหรับเป้าหมายในเป้าหมาย:
-                                ลอง :
-                                    nadya.kickoutFromGroup (msg.to [เป้าหมาย])
-                                    nadya.findAndAddContactsByMid (เป้าหมาย)
-                                    Nadya inviteIntoGroup (msg.to [เป้าหมาย])
-                                ยกเว้น :
-                                    ผ่านไป
-# =========================================== ============================= #
-                elif text.lower () ==  'เชคแอด' :
-                    group = nadya.getGroup (to)
-                    GS  = group.creator.mid
-                    nadya.sendContact (to, GS )
-                elif text.lower () ==  'ไอดีกลุ่ม' :
-                    gid = nadya.getGroup (to)
-                    nadya.sendMessage (to, " \ n "  + gid.id)
-                elif text.lower () ==  'รูปกลุ่ม' :
-                    group = nadya.getGroup (to)
-                    path =  " http://dl.profile.line-cdn.net/ "  + group.pictureStatus
-                    nadya.sendImageWithURL (ไป, เส้นทาง)
-                elif text.lower () ==  'ชื่อกลุ่ม' :
-                    gid = nadya.getGroup (to)
-                    nadya.sendMessage (to, " \ n "  + gid.name)
-                elif text.lower () ==  'ลิ้งกลุ่ม' :
-                    ถ้า msg.toType ==  2 :
-                        group = nadya.getGroup (to)
-                        ถ้า group.preventedJoinByTicket ==  เท็จ :
-                            ticket = nadya.reissueGroupTicket (to)
-                            nadya.sendMessage (to " https://line.me/R/ti/g/ {} "รูปแบบ ( str (ticket)))
-                        อื่น :
-                            nadya.sendMessage (ไป"กรุณาเปิดลิ้งกลุ่มก่อน\ nลงคำสั่งนี้ด้วยครับเจ้านายʕ •ᴥ•ʔ " .format ( STR (การตั้งค่า [ " keyCommand " ])))
-                elif text.lower () ==  ' # เปิดลิ้ง' :
-                    ถ้า msg.toType ==  2 :
-                        group = nadya.getGroup (to)
-                        ถ้า group.preventedJoinByTicket ==  เท็จ :
-                            nadya.sendMessage (to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                        อื่น :
-                            group.preventedJoinByTicket =  เท็จ
-                            nadya.updateGroup (กลุ่ม)
-                            nadya.sendMessage (to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                elif text.lower () ==  ' # ปิดลิ้ง' :
-                    ถ้า msg.toType ==  2 :
-                        group = nadya.getGroup (to)
-                        ถ้า group.preventedJoinByTicket ==  จริง :
-                            nadya.sendMessage (to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                        อื่น :
-                            group.preventedJoinByTicket =  จริง
-                            nadya.updateGroup (กลุ่ม)
-                            nadya.sendMessage (to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ " )
-                elif text.lower () ==  'ข้อมูลกลุ่ม' :
-                    group = nadya.getGroup (to)
-                    ลอง :
+                        gs = nadya.getGroup(msg.to)
+                        targets = []
+                        for s in gs.members:
+                            if _name in s.displayName:
+                                targets.append(s.mid)
+                        if targets == []:
+                            pass
+                        else:
+                            for target in targets:
+                                try:
+                                    nadya.kickoutFromGroup(msg.to,[target])
+                                    nadya.findAndAddContactsByMid(target)
+                                    nadya. inviteIntoGroup(msg.to,[target])
+                                except:
+                                    pass
+#==============================================================================#
+                elif text.lower() == 'เชคแอด':
+                    group = nadya.getGroup(to)
+                    GS = group.creator.mid
+                    nadya.sendContact(to, GS)
+                elif text.lower() == 'ไอดีกลุ่ม':
+                    gid = nadya.getGroup(to)
+                    nadya.sendMessage(to, "\n" + gid.id)
+                elif text.lower() == 'รูปกลุ่ม':
+                    group = nadya.getGroup(to)
+                    path = "http://dl.profile.line-cdn.net/" + group.pictureStatus
+                    nadya.sendImageWithURL(to, path)
+                elif text.lower() == 'ชื่อกลุ่ม':
+                    gid = nadya.getGroup(to)
+                    nadya.sendMessage(to, "\n" + gid.name)
+                elif text.lower() == 'ลิ้งกลุ่ม':
+                    if msg.toType == 2:
+                        group = nadya.getGroup(to)
+                        if group.preventedJoinByTicket == False:
+                            ticket = nadya.reissueGroupTicket(to)
+                            nadya.sendMessage(to, "https://line.me/R/ti/g/{}".format(str(ticket)))
+                        else:
+                            nadya.sendMessage(to, "กรุณาเปิดลิ้งกลุ่มก่อน\nลงคำสั่งนี้ด้วยครับเจ้านายʕ•ᴥ•ʔ".format(str(settings["keyCommand"])))
+                elif text.lower() == '#เปิดลิ้ง':
+                    if msg.toType == 2:
+                        group = nadya.getGroup(to)
+                        if group.preventedJoinByTicket == False:
+                            nadya.sendMessage(to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                        else:
+                            group.preventedJoinByTicket = False
+                            nadya.updateGroup(group)
+                            nadya.sendMessage(to, "เปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == '#ปิดลิ้ง':
+                    if msg.toType == 2:
+                        group = nadya.getGroup(to)
+                        if group.preventedJoinByTicket == True:
+                            nadya.sendMessage(to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                        else:
+                            group.preventedJoinByTicket = True
+                            nadya.updateGroup(group)
+                            nadya.sendMessage(to, "ปิดแล้วครับเจ้านายʕ•ᴥ•ʔ")
+                elif text.lower() == 'ข้อมูลกลุ่ม':
+                    group = nadya.getGroup(to)
+                    try:
                         gCreator = group.creator.displayName
-                    ยกเว้น :
-                        gCreator =  "ไม่พบผู้สร้าง"
-                    ถ้า group.invitee ไม่มีคือ  :
-                        gPending =  " 0 "
-                    อื่น :
-                        gPending =  str ( len (group.invitee))
-                    ถ้า group.preventedJoinByTicket ==  จริง :
-                        gQr =  "ปิด"
-                        gTicket =  "ลิ้งถูกปิดอยู่ .. "
-                    อื่น :
-                        gQr =  "เปิด"
-                        gTicket =  " https://line.me/R/ti/g/ {} "รูปแบบ ( str (nadya.reissueGroupTicket (group.id)))
-                    path =  " http://dl.profile.line-cdn.net/ "  + group.pictureStatus
-                    ret_ =  " ╔══ [ข้อมูลกลุ่ม] "
-                    ret_ + =  " \ n ╠ชื่อกลุ่ม: {} " .format ( str (group.name))
-                    ret_ + =  " \ n ╠ไอดีกลุ่ม: {} " .format (group.id)
-                    ret_ + =  " \ nผู้สร้างกลุ่ม: {} " .format ( str (gCreator))
-                    ret_ + =  " \ nสมาชิกกลุ่ม: {} "รูปแบบ ( str ( len (group.members)))
-                    ret_ + =  " \ n ╠ค้างไว้: {} "รูปแบบ (gPending)
-                    ret_ + =  " \ nกลุ่ม╠: {} "รูปแบบ (gQr)
-                    ret_ + =  " \ n ╠ลิ้งกลุ่ม: {} "รูปแบบ (gTicket)
-                    ret_ + =  " \ n ╚══ [M ai] "
-                    nadya.sendMessage (ถึง, str (ret_))
-                    nadya.sendImageWithURL (ไป, เส้นทาง)
-                elif text.lower () ==  'รายชื่อคนในห้อง' :
-                    ถ้า msg.toType ==  2 :
-                        group = nadya.getGroup (to)
-                        ret_ =  " ╔══ [รายชื่อกลุ่มสมชิก] "
-                        no =  0  +  1
-                        สำหรับ mem ในกลุ่มสมาชิก:
-                            ret_ + =  " \ n ╠ {} . {} " .format ( str (no), str (mem.displayName))
-                            no + =  1
-                        ret_ + =  " \ n ╚══ [จำนวนสมาชิก{}คนครับ้จ้านายʕ• ᴥ•ʔ ] " .format ( STR ( len (group.members)))
-                        nadya.sendMessage (ถึง, str (ret_))
-                elif text.lower () ==  'รายชื่อกลุ่ม' :
+                    except:
+                        gCreator = "ไม่พบผู้สร้าง"
+                    if group.invitee is None:
+                        gPending = "0"
+                    else:
+                        gPending = str(len(group.invitee))
+                    if group.preventedJoinByTicket == True:
+                        gQr = "ปิด"
+                        gTicket = "ลิ้งถูกปิดอยู่.."
+                    else:
+                        gQr = "เปิด"
+                        gTicket = "https://line.me/R/ti/g/{}".format(str(nadya.reissueGroupTicket(group.id)))
+                    path = "http://dl.profile.line-cdn.net/" + group.pictureStatus
+                    ret_ = "╔══[ ข้อมูลกลุ่ม ]"
+                    ret_ += "\n╠ ชื่อกลุ่ม : {}".format(str(group.name))
+                    ret_ += "\n╠ ไอดีกลุ่ม:{}".format(group.id)
+                    ret_ += "\n╠ ผู้สร้างกลุ่ม : {}".format(str(gCreator))
+                    ret_ += "\n╠ สมาชิกกลุ่ม : {}".format(str(len(group.members)))
+                    ret_ += "\n╠ ค้างเชิญ : {}".format(gPending)
+                    ret_ += "\n╠ กลุ่มตั๋ว:{}".format(gQr)
+                    ret_ += "\n╠ ลิ้งกลุ่ม : {}".format(gTicket)
+                    ret_ += "\n╚══[ M a i ]"
+                    nadya.sendMessage(to, str(ret_))
+                    nadya.sendImageWithURL(to, path)
+                elif text.lower() == 'รายชื่อคนในห้อง':
+                    if msg.toType == 2:
+                        group = nadya.getGroup(to)
+                        ret_ = "╔══[ รายชื่อสมชิกกลุ่ม ]"
+                        no = 0 + 1
+                        for mem in group.members:
+                            ret_ += "\n╠ {}. {}".format(str(no), str(mem.displayName))
+                            no += 1
+                        ret_ += "\n╚══[ จำนวนสมาชิก {} คนครับ้จ้านายʕ•ᴥ•ʔ ]".format(str(len(group.members)))
+                        nadya.sendMessage(to, str(ret_))
+                elif text.lower() == 'รายชื่อกลุ่ม':
                         groups = nadya.groups
-                        ret_ =  " ╔══ [รายชื่อกลุ่ม] "
-                        no =  0  +  1
-                        สำหรับ gid ในกลุ่ม:
-                            กลุ่ม= nadya.getGroup (gid)
-                            ret_ + =  " \ n ╠ {} . {} | {} " .format ( STR (ไม่) STR (group.name) STR ( len (group.members)))
-                            no + =  1
-                        ret_ + =  " \ n [กลุ่มจำนวน{ @ }กลุ่มเจ้านายʕ•ᴥ•ʔ] " .format ( str ( len (groups)))
-                        nadya.sendMessage (ถึง, str (ret_))
-# =========================================== ============================= #          
-                elif text.lower () ==  'แทค' :
-                    กลุ่ม= nadya.getGroup (msg.to)
-                    nama = [contact.mid สำหรับการติดต่อในกลุ่มสมาชิก]
-                    k =  len (nama) / 100
-                    สำหรับใน ช่วง (k + 1 ):
-                        txt =  u ' '
-                        s = 0
-                        b = []
-                        สำหรับฉันใน group.members [เป็น* 100 (a + 1 ) * 100 ]:
-                            b.append ({ " S " : str (s), " E " : str (s + 6 ), " M " : i.mid})
-                            s + =  7
-                            txt + =  u ' @Alin \ n '
-                        nadya.sendMessage (ถึงข้อความ= txt, contentMetadata = { U 'กล่าวถึง' : json.dumps ({ ' MENTIONEES ' : ข})} contentType = 0 )
-                        nadya.sendMessage (to, "จำนวนสมาชิก{}คนครับเจ้านายʕ•ᴥ•ʔ " .format ( str ( len (nama))))          
-                elif text.lower () ==  'เปิดอ่าน' :
-                    tz = pytz.timezone ( "เอเชีย / จาการ์ตา" )
-                    timeNow = datetime.now ( tz = tz)
-                    วัน= [ " Sunday " , " Monday " , " Tuesday " , " Wednesday " , " Thursday " , " Friday " , " Saturday " ]
-                    hari = [ " Minggu " , " Senin " , " Selasa " , " Rabu " , " Kamis " , " Jumat " , " Sabtu " ]
-                    bulan = [ " Januari " , " Februari " , " Maret " , " April " , " Mei " , " Juni " , " Juli " , " Agustus " , " September " , " Oktober " , " November " , " Desember "]
-                    hr = timeNow.strftime ( " % A " )
-                    bln = timeNow.strftime ( " % m " )
-                    สำหรับ i ใน ช่วง ( len (day)):
-                        if hr == day [i]: hasil = hari [i]
-                    สำหรับ k ใน ช่วง ( 0 , len (bulan)):
-                        ถ้า bln ==  str (k): bln = bulan [k - 1 ]
-                    readTime = Hasil +  " "  + timeNow.strftime ( ' % d ' ) +  " - "  +พันล้าน+  " - "  + timeNow.strftime ( ' % Y ' ) +  " \ n Jam: [ "  + timeNow.strftime ( ' % H:% M:% S ' ) +  " ] "
-                    ถ้า msg.to ในการอ่าน [ ' readPoint ' ]:
-                            ลอง :
-                                delอ่าน [ ' readPoint ' ] [msg.to]
-                                delอ่าน [ ' readMember ' ] [msg.to]
-                                delอ่าน [ ' readTime ' ] [msg.to]
-                            ยกเว้น :
-                                ผ่านไป
-                            อ่าน [ ' readPoint ' ] [msg.to] = msg.id
-                            อ่าน [ ' readMember ' ] [msg.to] =  " "
-                            อ่าน [ ' readTime ' ] [msg.to] = datetime.now (). strftime ( ' % H:% M:% S ' )
-                            อ่าน [ ' ROM ' ] [msg.to] = {}
-                            กับ open ( ' read.json ' , ' w ' ) เป็น fp:
-                                json.dump (อ่าน, fp, sort_keys = True , indent = 4 )
-                                nadya.sendMessage (msg.to, "หาคนซุ่มซ่ามʕ•ᴥ•ʔ " )
-                    อื่น :
-                        ลอง :
-                            delอ่าน [ ' readPoint ' ] [msg.to]
-                            delอ่าน [ ' readMember ' ] [msg.to]
-                            delอ่าน [ ' readTime ' ] [msg.to]
-                        ยกเว้น :
-                            ผ่านไป
-                        อ่าน [ ' readPoint ' ] [msg.to] = msg.id
-                        อ่าน [ ' readMember ' ] [msg.to] =  " "
-                        อ่าน [ ' readTime ' ] [msg.to] = datetime.now (). strftime ( ' % H:% M:% S ' )
-                        อ่าน [ ' ROM ' ] [msg.to] = {}
-                        กับ open ( ' read.json ' , ' w ' ) เป็น fp:
-                            json.dump (อ่าน, fp, sort_keys = True , indent = 4 )
-                            nadya.sendMessage (msg.to, "กำหนดจุดอ่าน: \ n "  + readTime)
+                        ret_ = "╔══[ รายชื่อกลุ่ม ]"
+                        no = 0 + 1
+                        for gid in groups:
+                            group = nadya.getGroup(gid)
+                            ret_ += "\n╠ {}. {} | {}".format(str(no), str(group.name), str(len(group.members)))
+                            no += 1
+                        ret_ += "\n╚══[ จำนวนกลุ่ม {} กลุ่มครับเจ้านายʕ•ᴥ•ʔ ]".format(str(len(groups)))
+                        nadya.sendMessage(to, str(ret_))
+#==============================================================================#          
+                elif text.lower() == 'แทค':
+                    group = nadya.getGroup(msg.to)
+                    nama = [contact.mid for contact in group.members]
+                    k = len(nama)//100
+                    for a in range(k+1):
+                        txt = u''
+                        s=0
+                        b=[]
+                        for i in group.members[a*100 : (a+1)*100]:
+                            b.append({"S":str(s), "E" :str(s+6), "M":i.mid})
+                            s += 7
+                            txt += u'@Alin \n'
+                        nadya.sendMessage(to, text=txt, contentMetadata={u'MENTION': json.dumps({'MENTIONEES':b})}, contentType=0)
+                        nadya.sendMessage(to, "จำนวนสมาชิก {} คนครับเจ้านายʕ•ᴥ•ʔ".format(str(len(nama))))          
+                elif text.lower() == 'เปิดอ่าน':
+                    tz = pytz.timezone("Asia/Jakarta")
+                    timeNow = datetime.now(tz=tz)
+                    day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
+                    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+                    bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+                    hr = timeNow.strftime("%A")
+                    bln = timeNow.strftime("%m")
+                    for i in range(len(day)):
+                        if hr == day[i]: hasil = hari[i]
+                    for k in range(0, len(bulan)):
+                        if bln == str(k): bln = bulan[k-1]
+                    readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
+                    if msg.to in read['readPoint']:
+                            try:
+                                del read['readPoint'][msg.to]
+                                del read['readMember'][msg.to]
+                                del read['readTime'][msg.to]
+                            except:
+                                pass
+                            read['readPoint'][msg.to] = msg.id
+                            read['readMember'][msg.to] = ""
+                            read['readTime'][msg.to] = datetime.now().strftime('%H:%M:%S')
+                            read['ROM'][msg.to] = {}
+                            with open('read.json', 'w') as fp:
+                                json.dump(read, fp, sort_keys=True, indent=4)
+                                nadya.sendMessage(msg.to,"เปิดหาคนซุ่มʕ•ᴥ•ʔ")
+                    else:
+                        try:
+                            del read['readPoint'][msg.to]
+                            del read['readMember'][msg.to]
+                            del read['readTime'][msg.to]
+                        except:
+                            pass
+                        read['readPoint'][msg.to] = msg.id
+                        read['readMember'][msg.to] = ""
+                        read['readTime'][msg.to] = datetime.now().strftime('%H:%M:%S')
+                        read['ROM'][msg.to] = {}
+                        with open('read.json', 'w') as fp:
+                            json.dump(read, fp, sort_keys=True, indent=4)
+                            nadya.sendMessage(msg.to, "Set reading point:\n" + readTime)
                             
-                elif text.lower () ==  'ปิดอ่าน' :
-                    tz = pytz.timezone ( "เอเชีย / จาการ์ตา" )
-                    timeNow = datetime.now ( tz = tz)
-                    วัน= [ " Sunday " , " Monday " , " Tuesday " , " Wednesday " , " Thursday " , " Friday " , " Saturday " ]
-                    hari = [ " Minggu " , " Senin " , " Selasa " , " Rabu " , " Kamis " , " Jumat " , " Sabtu " ]
-                    bulan = [ " Januari " , " Februari " , " Maret " , " April " , " Mei " , " Juni " , " Juli " , " Agustus " , " September " , " Oktober " , " November " , " Desember "]
-                    hr = timeNow.strftime ( " % A " )
-                    bln = timeNow.strftime ( " % m " )
-                    สำหรับ i ใน ช่วง ( len (day)):
-                        if hr == day [i]: hasil = hari [i]
-                    สำหรับ k ใน ช่วง ( 0 , len (bulan)):
-                        ถ้า bln ==  str (k): bln = bulan [k - 1 ]
-                    readTime = Hasil +  " "  + timeNow.strftime ( ' % d ' ) +  " - "  +พันล้าน+  " - "  + timeNow.strftime ( ' % Y ' ) +  " \ n Jam: [ "  + timeNow.strftime ( ' % H:% M:% S ' ) +  " ] "
-                    ถ้า msg.to ไม่ อยู่ใน read [ ' readPoint ' ]:
-                        nadya.sendMessage (msg.to, "หาคนซุ่มซ่ามʕ•ᴥ•ʔ " )
-                    อื่น :
-                        ลอง :
-                            delอ่าน [ ' readPoint ' ] [msg.to]
-                            delอ่าน [ ' readMember ' ] [msg.to]
-                            delอ่าน [ ' readTime ' ] [msg.to]
-                        ยกเว้น :
-                              ผ่านไป
-                        nadya.sendMessage (msg.to, "ลบจุดอ่าน: \ n "  + readTime)
+                elif text.lower() == 'ปิดอ่าน':
+                    tz = pytz.timezone("Asia/Jakarta")
+                    timeNow = datetime.now(tz=tz)
+                    day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
+                    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+                    bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+                    hr = timeNow.strftime("%A")
+                    bln = timeNow.strftime("%m")
+                    for i in range(len(day)):
+                        if hr == day[i]: hasil = hari[i]
+                    for k in range(0, len(bulan)):
+                        if bln == str(k): bln = bulan[k-1]
+                    readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
+                    if msg.to not in read['readPoint']:
+                        nadya.sendMessage(msg.to,"ปิดหาคนซุ่มʕ•ᴥ•ʔ")
+                    else:
+                        try:
+                            del read['readPoint'][msg.to]
+                            del read['readMember'][msg.to]
+                            del read['readTime'][msg.to]
+                        except:
+                              pass
+                        nadya.sendMessage(msg.to, "Delete reading point:\n" + readTime)
     
-                elif text.lower () ==  'ลบเวลาอ่าน' :
-                    tz = pytz.timezone ( "เอเชีย / จาการ์ตา" )
-                    timeNow = datetime.now ( tz = tz)
-                    วัน= [ " Sunday " , " Monday " , " Tuesday " , " Wednesday " , " Thursday " , " Friday " , " Saturday " ]
-                    hari = [ " Minggu " , " Senin " , " Selasa " , " Rabu " , " Kamis " , " Jumat " , " Sabtu " ]
-                    bulan = [ " Januari " , " Februari " , " Maret " , " April " , " Mei " , " Juni " , " Juli " , " Agustus " , " September " , " Oktober " , " November " , " Desember "]
-                    hr = timeNow.strftime ( " % A " )
-                    bln = timeNow.strftime ( " % m " )
-                    สำหรับ i ใน ช่วง ( len (day)):
-                        if hr == day [i]: hasil = hari [i]
-                    สำหรับ k ใน ช่วง ( 0 , len (bulan)):
-                        ถ้า bln ==  str (k): bln = bulan [k - 1 ]
-                    readTime = Hasil +  " "  + timeNow.strftime ( ' % d ' ) +  " - "  +พันล้าน+  " - "  + timeNow.strftime ( ' % Y ' ) +  " \ n Jam: [ "  + timeNow.strftime ( ' % H:% M:% S ' ) +  " ] "
-                    ถ้า msg.to ในการอ่าน [ " readPoint " ]:
-                        ลอง :
-                            delอ่าน [ " readPoint " ] [msg.to]
-                            delอ่าน [ " readMember " ] [msg.to]
-                            delอ่าน [ " readTime " ] [msg.to]
-                        ยกเว้น :
-                            ผ่านไป
-                        nadya.sendMessage (msg.to, "รีเซ็ตจุดอ่าน: \ n "  + readTime)
-                    อื่น :
-                        nadya.sendMessage (msg.to, "ไม่ได้เปิดการหาʕ•ᴥ•ʔ " )
+                elif text.lower() == 'ลบเวลาอ่าน':
+                    tz = pytz.timezone("Asia/Jakarta")
+                    timeNow = datetime.now(tz=tz)
+                    day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
+                    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+                    bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+                    hr = timeNow.strftime("%A")
+                    bln = timeNow.strftime("%m")
+                    for i in range(len(day)):
+                        if hr == day[i]: hasil = hari[i]
+                    for k in range(0, len(bulan)):
+                        if bln == str(k): bln = bulan[k-1]
+                    readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
+                    if msg.to in read["readPoint"]:
+                        try:
+                            del read["readPoint"][msg.to]
+                            del read["readMember"][msg.to]
+                            del read["readTime"][msg.to]
+                        except:
+                            pass
+                        nadya.sendMessage(msg.to, "Reset reading point:\n" + readTime)
+                    else:
+                        nadya.sendMessage(msg.to, "ไม่ได้เปิดการหาʕ•ᴥ•ʔ")
                         
-                elif text.lower () ==  'คนอ่าน' :
-                    tz = pytz.timezone ( "เอเชีย / จาการ์ตา" )
-                    timeNow = datetime.now ( tz = tz)
-                    วัน= [ " Sunday " , " Monday " , " Tuesday " , " Wednesday " , " Thursday " , " Friday " , " Saturday " ]
-                    hari = [ " Minggu " , " Senin " , " Selasa " , " Rabu " , " Kamis " , " Jumat " , " Sabtu " ]
-                    bulan = [ " Januari " , " Februari " , " Maret " , " April " , " Mei " , " Juni " , " Juli " , " Agustus " , " September " , " Oktober " , " November " , " Desember "]
-                    hr = timeNow.strftime ( " % A " )
-                    bln = timeNow.strftime ( " % m " )
-                    สำหรับ i ใน ช่วง ( len (day)):
-                        if hr == day [i]: hasil = hari [i]
-                    สำหรับ k ใน ช่วง ( 0 , len (bulan)):
-                        ถ้า bln ==  str (k): bln = bulan [k - 1 ]
-                    readTime = Hasil +  " "  + timeNow.strftime ( ' % d ' ) +  " - "  +พันล้าน+  " - "  + timeNow.strftime ( ' % Y ' ) +  " \ n Jam: [ "  + timeNow.strftime ( ' % H:% M:% S ' ) +  " ] "
-                    ถ้ารับในการอ่าน [ ' readPoint ' ]:
-                        ถ้าอ่าน [ " ROM " ] [ตัวรับ] .items () == []:
-                            nadya.sendMessage (receiver, " [Reader]: \ nไม่มี" )
-                        อื่น :
+                elif text.lower() == 'คนอ่าน':
+                    tz = pytz.timezone("Asia/Jakarta")
+                    timeNow = datetime.now(tz=tz)
+                    day = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday","Friday", "Saturday"]
+                    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+                    bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
+                    hr = timeNow.strftime("%A")
+                    bln = timeNow.strftime("%m")
+                    for i in range(len(day)):
+                        if hr == day[i]: hasil = hari[i]
+                    for k in range(0, len(bulan)):
+                        if bln == str(k): bln = bulan[k-1]
+                    readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
+                    if receiver in read['readPoint']:
+                        if read["ROM"][receiver].items() == []:
+                            nadya.sendMessage(receiver,"[ Reader ]:\nNone")
+                        else:
                             chiya = []
-                            สำหรับ rom in read [ " ROM " ] [receiver] .items ():
-                                chiya.append (rom [ 1 ])
-                            cmem = nadya.getContacts (chiya)
-                            zx =  " "
-                            zxc =  " "
+                            for rom in read["ROM"][receiver].items():
+                                chiya.append(rom[1])
+                            cmem = nadya.getContacts(chiya) 
+                            zx = ""
+                            zxc = ""
                             zx2 = []
-                            xpesan =  ' [Reader]: \ n '
-                        สำหรับ x ใน ช่วง ( len (cmem)):
-                            xname =  str (cmem [x] .displayName)
-                            pesan =  ' '
-                            pesan2 = pesan + " @c \ n "
-                            xlen =  str ( len (zxc) + len (xpesan))
-                            xlen2 =  str ( len (zxc) + len (pesan2) + len (xpesan) - 1 )
-                            zx = { ' S ' : xlen, ' E ' : xlen2, ' M ' : cmem [x] .mid}
-                            zx2.append (ZX)
-                            zxc + = pesan2
-                        text = xpesan + zxc +  " \ n [เวลาที่ซุ่มซ่อน]: \ n "  + readTime
-                        ลอง :
-                            nadya.sendMessage (เครื่องรับ, ข้อความ, contentMetadata = { 'กล่าวถึง' : STR ( ' { "MENTIONEES": ' + json.dumps (ZX2) .replace ( '  ' , ' ' ) + ' } ' )} contentType = 0 )
-                        ยกเว้น ข้อยกเว้น เป็นข้อผิดพลาด:
-                            พิมพ์ (ข้อผิดพลาด)
-                        ผ่านไป
-                    อื่น :
-                        nadya.sendMessage (ผู้รับ"ไม่ได้รับการซุ่มซ่อนอยู่" )
-# =========================================== ============================= #
-                elif msg.text.lower (). startswith ( "พูด" ):
-                    sep = text.split ( "  " )
-                    พูด= text.replace (กันยายน [ 0 ] +  "  " , " " )
-                    lang =  ' th '
-                    tts = gTTS ( text =พูดlang = lang)
-                    tts.save ( " hasil.mp3 " )
-                    nadya.sendAudio (msg.to, " hasil.mp3 " )
-# =========================================== ============================= #   
-                elif text.lower () ==  'ปอยิทิน' :
-                    tz = pytz.timezone ( " Asia / Makassar " )
-                    timeNow = datetime.now ( tz = tz)
-                    วัน= [ "วันจัน" , "วันอังคาร" , "วันพุธ" , "วันพฤหั" , "วันศุก" , "วันเสา" , "วันอาทิต" ]
-                    hari = [ " Minggu " , " Senin " , " Selasa " , " Rabu " , " Kamis " , " Jumat " , " Sabtu " ]
-                    Bulan = [ "มกราคม" , "กุมภาพัน" , "มีนาคม" , "เมษายน" , "พฤษาภาคม" , "มิถุนายน" , "กรกฎาคม" , "สิงหาคม" , "กันยายน" , "ตุลาคม" , "พฤศจิกายน" , "ธันวาคม" ]
-                    hr = timeNow.strftime ( " % A " )
-                    bln = timeNow.strftime ( " % m " )
-                    สำหรับ i ใน ช่วง ( len (day)):
-                        if hr == day [i]: hasil = hari [i]
-                    สำหรับ k ใน ช่วง ( 0 , len (bulan)):
-                        ถ้า bln ==  str (k): bln = bulan [k - 1 ]
-                    readTime = Hasil +  " "  + timeNow.strftime ( ' % d ' ) +  " - "  +พันล้าน+  " - "  + timeNow.strftime ( ' % Y ' ) +  " \ n Jam: [ "  + timeNow.strftime ( ' % H:% M:% S ' ) +  " ] "
-                    nadya.sendMessage (msg.to, readTime
-                 elif  " screenshotwebsite " ใน msg.text.lower ():
-                    sep = text.split ( "  " )
-                    query = text.replace (sep [ 0 ] +  "  " , " " )
-                    กับ requests.session () เป็นเว็บ:
-                        r = web.get ( " http://rahandiapi.herokuapp.com/sswebAPI?key=betakey&link= {} "รูปแบบ (urllib.parse.quote (แบบสอบถาม))))
-                        ข้อมูล= r.text
-                        data = json.loads (data)
-                        nadya.sendImageWithURL (ถึง, data [ " result " ]))
-                elif  " checkdate " ใน msg.text.lower ():
-                    sep = msg.text.split ( "  " )
-                    ตามวัน= msg.text.replace (กันยายน [ 0 ] +  "  " , " " )
-                    r = requests.get ( ' https://script.google.com/macros/exec?service=AKfycbw7gKzP-WYV2F5mc9RaR7yE3Ve1yN91Tjs91hp_jHSE02dSv9w&nama=ervan&tanggal= ' + tanggal)
-                    ข้อมูล= r.text
-                    data = json.loads (data)
-                    ret_ =  " ╔══ [DATE] "
-                    ret_ + =  " \ n ╠วันเดือนปีเกิด: {} "รูปแบบ ( str (data [ " data " ] [ " lahir " ]))
-                    ret_ + =  " \ n ╠อายุ: {} "รูปแบบ ( str (ข้อมูล [ "ข้อมูล" ] [ " usia " ]))
-                    ret_ + =  " \ n ╠วันเกิด: {} "รูปแบบ ( str (ข้อมูล [ "ข้อมูล" ] [ " ultah " ]))
-                    ret_ + =  " \ n ╠ Zodiak: {} " .format ( str (data [ " data " ] [ " zodiak " ]))
-                    ret_ + =  " \ n ╚══ [ความสำเร็จ] "
-                    nadya.sendMessage (ถึง, str (ret_))
-                elif  " instagraminfo " ใน msg.text.lower ():
-                    sep = text.split ( "  " )
-                    search = text.replace (sep [ 0 ] +  "  " , " " )
-                    กับ requests.session () เป็นเว็บ:
-                        web.headers [ " User-Agent " ] = random.choice (การตั้งค่า [ " userAgent " ])
-                        r = web.get ( " https://www.instagram.com/ {} /? __ a = 1 "รูปแบบ (ค้นหา))
-                        ลอง :
-                            data = json.loads (r.text)
-                            ret_ =  " ╔══ [Instagram โปรไฟล์] "
-                            ret_ + =  " \ n ╠ Nama: {} "รูปแบบ ( str (ข้อมูล [ " user " ] [ " full_name " ]))
-                            ret_ + =  " \ n ╠ชื่อผู้ใช้: {} "รูปแบบ ( str (ข้อมูล [ " user " ] [ " username " ]))
-                            ret_ + =  " \ nชีววิทยา: {} "รูปแบบ ( str (ข้อมูล [ " user " ] [ "ประวัติ" ])))
-                            ret_ + =  " \ n ╠ Pengikut: {} " .format (format_number (ข้อมูล [ "ผู้ใช้" ] [ " followed_by " ] [ "นับ" ]))
-                            ret_ + =  " \ n ╠ Diikuti: {} " .format (format_number (ข้อมูล [ "ผู้ใช้" ] [ "ดังนี้" ] [ "นับ" ]))
-                            ถ้าข้อมูล [ "ผู้ใช้" ] [ " is_verified " ] ==  จริง :
-                                ret_ + =  " \ n ╠ Verified: Sudah "
-                            อื่น :
-                                ret_ + =  " \ n ╠ Verifikasi: Belum "
-                            ถ้าข้อมูล [ " user " ] [ " is_private " ] ==  True :
-                                ret_ + =  " \ n ╠ Akun Pribadi: Iya "
-                            อื่น :
-                                ret_ + =  " \ n ╠ Akun Pribadi: Tidak "
-                            ret_ + =  " \ nรวมทั้งหมด: {} " .format (format_number (data [ " user " ] [ " media " ] [ " count " ]))
-                            ret_ + =  " \ n ╚══ [https://www.instagram.com/ {} ] " .format (ค้นหา)
-                            path =ข้อมูล [ " user " ] [ " profile_pic_url_hd " ]
-                            nadya.sendImageWithURL (ถึง, str (เส้นทาง))
-                            nadya.sendMessage (ถึง, str (ret_))
-                        ยกเว้น :
-                            nadya.sendMessage (ถึง" Pengguna tidak ditemukan " )
-                elif  " instagrampost " ใน msg.text.lower ():
-                    แยก= msg.text.split ( "  " )
-                    user = msg.text.replace (แยก [ 0 ] +  "  " , " " )
-                    โปรไฟล์=  " https://www.instagram.com/ "  +ผู้ใช้
-                    กับ requests.session () เป็น x:
-                        x.headers [ ' user-agent ' ] =  ' Mozilla / 5.0 '
-                        end_cursor =  ' '
-                        สำหรับการนับใน ช่วง ( 1 , 999 ):
-                            พิมพ์ ( ' PAGE: ' , นับ)
-                            r = x.get (โปรไฟล์, params = { ' max_id ' : end_cursor})
+                            xpesan = '[ Reader ]:\n'
+                        for x in range(len(cmem)):
+                            xname = str(cmem[x].displayName)
+                            pesan = ''
+                            pesan2 = pesan+"@c\n"
+                            xlen = str(len(zxc)+len(xpesan))
+                            xlen2 = str(len(zxc)+len(pesan2)+len(xpesan)-1)
+                            zx = {'S':xlen, 'E':xlen2, 'M':cmem[x].mid}
+                            zx2.append(zx)
+                            zxc += pesan2
+                        text = xpesan+ zxc + "\n[ Lurking time ]: \n" + readTime
+                        try:
+                            nadya.sendMessage(receiver, text, contentMetadata={'MENTION':str('{"MENTIONEES":'+json.dumps(zx2).replace(' ','')+'}')}, contentType=0)
+                        except Exception as error:
+                            print (error)
+                        pass
+                    else:
+                        nadya.sendMessage(receiver,"Lurking has not been set.")
+#==============================================================================#
+                elif msg.text.lower().startswith("พูด "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'th'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+		elif msg.text.lower().startswith("say-af "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'af'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+        
+                elif msg.text.lower().startswith("say-sq "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'sq'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ar "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ar'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-hy "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'hy'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-bn "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'bn'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ca "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ca'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-zh "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'zh'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-zh-cn "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'zh-cn'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-zh-tw "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'zh-tw'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-zh-yue "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'zh-yue'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-hr "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'hr'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-cs "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'cs'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-da "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'da'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-nl "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'nl'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-en "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'en'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-en-au "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'en-au'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-en-uk "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'en-uk'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-en-us "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'en-us'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-eo "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'eo'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-fi "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'fi'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-fr "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'fr'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-de "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'de'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-el "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'el'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-hi "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'hi'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-hu "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'hu'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-is "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'is'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-id "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'id'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-it "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'it'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ja "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ja'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-km "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'km'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ko "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ko'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-la "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'la'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-lv "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'lv'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-mk "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'mk'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-no "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'no'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-pl "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'pl'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-pt "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'pt'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-do "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ro'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ru "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ru'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-sr "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'sr'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-si "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'si'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-sk "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'sk'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-es "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'es'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-es-es "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'es-es'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-es-us "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'es-us'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-sw "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'sw'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-sv "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'sv'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-ta "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'ta'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+     
+                elif msg.text.lower().startswith("say-tr "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'tr'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-uk "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'uk'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-vi "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'vi'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+                    
+                elif msg.text.lower().startswith("say-cy "):
+                    sep = text.split(" ")
+                    say = text.replace(sep[0] + " ","")
+                    lang = 'cy'
+                    tts = gTTS(text=say, lang=lang)
+                    tts.save("hasil.mp3")
+                    nadya.sendAudio(msg.to,"hasil.mp3")
+#==============================================================================# 
+                elif msg.text.lower().startswith("tr-af "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='af')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sq "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sq')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-am "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='am')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ar "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ar')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-hy "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='hy')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-az "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='az')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-eu "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='eu')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-be "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='be')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-bn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='bn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-bs "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='bs')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-bg "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='bg')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ca "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ca')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ceb "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ceb')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ny "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ny')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-zh-cn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='zh-cn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-zh-tw "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='zh-tw')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-co "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='co')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-hr "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='hr')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-cs "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='cs')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-da "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='da')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-nl "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='nl')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-en "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='en')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-et "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='et')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-fi "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='fi')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-fr "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='fr')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-fy "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='fy')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-gl "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='gl')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ka "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ka')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-de "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='de')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-el "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='el')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-gu "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='gu')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ht "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ht')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ha "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ha')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-haw "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='haw')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-iw "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='iw')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-hi "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='hi')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-hmn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='hmn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-hu "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='hu')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-is "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='is')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ig "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ig')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-id "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='id')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ga "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ga')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-it "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='it')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ja "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ja')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-jw "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='jw')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-kn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='kn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-kk "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='kk')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-km "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='km')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ko "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ko')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ku "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ku')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ky "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ky')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-lo "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='lo')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-la "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='la')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-lv "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='lv')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-lt "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='lt')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-lb "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='lb')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mk "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mk')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mg "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mg')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ms "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ms')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ml "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ml')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mt "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mt')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mi "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mi')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mr "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mr')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-mn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='mn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-my "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='my')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ne "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ne')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-no "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='no')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ps "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ps')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-fa "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='fa')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-pl "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='pl')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-pt "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='pt')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-pa "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='pa')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ro "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ro')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ru "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ru')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sm "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sm')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-gd "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='gd')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sr "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sr')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-st "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='st')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sn "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sn')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sd "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sd')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-si "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='si')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sk "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sk')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sl "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sl')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-so "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='so')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-es "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='es')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-su "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='su')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sw "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sw')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-sv "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='sv')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-tg "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='tg')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ta "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ta')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-te "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='te')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-th "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='th')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-tr "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='tr')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-uk "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='uk')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-ur "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='ur')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-uz "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='uz')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-vi "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='vi')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-cy "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='cy')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-xh "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='xh')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-yi "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='yi')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-yo "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='yo')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-zu "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='zu')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-fil "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='fil')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+                elif msg.text.lower().startswith("tr-he "):
+                    sep = text.split(" ")
+                    isi = text.replace(sep[0] + " ","")
+                    translator = Translator()
+                    hasil = translator.translate(isi, dest='he')
+                    A = hasil.text
+                    nadya.sendMessage(msg.to, A)
+#==============================================================================#   
+                elif text.lower() == 'ปฎิทิน':
+                    tz = pytz.timezone("Asia/Makassar")
+                    timeNow = datetime.now(tz=tz)
+                    day = ["วันจัน", "วันอังคาร", "วันพุธ", "วันพฤหั", "วันศุก","วันเสา", "วันอาทิต"]
+                    hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"]
+                    bulan = ["มกราคม", "กุมภาพัน", "มีนาคม", "เมษายน", "พฤษาภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]
+                    hr = timeNow.strftime("%A")
+                    bln = timeNow.strftime("%m")
+                    for i in range(len(day)):
+                        if hr == day[i]: hasil = hari[i]
+                    for k in range(0, len(bulan)):
+                        if bln == str(k): bln = bulan[k-1]
+                    readTime = hasil + ", " + timeNow.strftime('%d') + " - " + bln + " - " + timeNow.strftime('%Y') + "\nJam : [ " + timeNow.strftime('%H:%M:%S') + " ]"
+                    nadya.sendMessage(msg.to, readTime)
+		elif "เว็บไซต์ภาพหน้าจอ" in msg.text.lower():
+                    sep = text.split(" ")
+                    query = text.replace(sep[0] + " ","")
+                    with requests.session() as web:
+                        r = web.get("http://rahandiapi.herokuapp.com/sswebAPI?key=betakey&link={}".format(urllib.parse.quote(query)))
+                        data = r.text
+                        data = json.loads(data)
+                        nadya.sendImageWithURL(to, data["result"])
+                elif "ตรวจสอบวันที่" in msg.text.lower():
+                    sep = msg.text.split(" ")
+                    tanggal = msg.text.replace(sep[0] + " ","")
+                    r=requests.get('https://script.google.com/macros/exec?service=AKfycbw7gKzP-WYV2F5mc9RaR7yE3Ve1yN91Tjs91hp_jHSE02dSv9w&nama=ervan&tanggal='+tanggal)
+                    data=r.text
+                    data=json.loads(data)
+                    ret_ = "╔══[ D A T E ]"
+                    ret_ += "\n╠ Date Of Birth : {}".format(str(data["data"]["lahir"]))
+                    ret_ += "\n╠ Age : {}".format(str(data["data"]["usia"]))
+                    ret_ += "\n╠ Birthday : {}".format(str(data["data"]["ultah"]))
+                    ret_ += "\n╠ Zodiak : {}".format(str(data["data"]["zodiak"]))
+                    ret_ += "\n╚══[ Success ]"
+                    nadya.sendMessage(to, str(ret_))
+                elif "ข้อมูลIG" in msg.text.lower():
+                    sep = text.split(" ")
+                    search = text.replace(sep[0] + " ","")
+                    with requests.session() as web:
+                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
+                        r = web.get("https://www.instagram.com/{}/?__a=1".format(search))
+                        try:
+                            data = json.loads(r.text)
+                            ret_ = "╔══[ Profile Instagram ]"
+                            ret_ += "\n╠ ชื่อ : {}".format(str(data["user"]["full_name"]))
+                            ret_ += "\n╠ ชื่อผู้ใช้ : {}".format(str(data["user"]["username"]))
+                            ret_ += "\n╠ Bio : {}".format(str(data["user"]["biography"]))
+                            ret_ += "\n╠ Pengikut : {}".format(format_number(data["user"]["followed_by"]["count"]))
+                            ret_ += "\n╠ Diikuti : {}".format(format_number(data["user"]["follows"]["count"]))
+                            if data["user"]["is_verified"] == True:
+                                ret_ += "\n╠ Verifikasi : Sudah"
+                            else:
+                                ret_ += "\n╠ Verifikasi : Belum"
+                            if data["user"]["is_private"] == True:
+                                ret_ += "\n╠ Akun Pribadi : Iya"
+                            else:
+                                ret_ += "\n╠ Akun Pribadi : Tidak"
+                            ret_ += "\n╠ Total Post : {}".format(format_number(data["user"]["media"]["count"]))
+                            ret_ += "\n╚══[ https://www.instagram.com/{} ]".format(search)
+                            path = data["user"]["profile_pic_url_hd"]
+                            nadya.sendImageWithURL(to, str(path))
+                            nadya.sendMessage(to, str(ret_))
+                        except:
+                            nadya.sendMessage(to, "Pengguna tidak ditemukan")
+                elif "โพสIG" in msg.text.lower():
+                    separate = msg.text.split(" ")
+                    user = msg.text.replace(separate[0] + " ","")
+                    profile = "https://www.instagram.com/" + user
+                    with requests.session() as x:
+                        x.headers['user-agent'] = 'Mozilla/5.0'
+                        end_cursor = ''
+                        for count in range(1, 999):
+                            print('PAGE: ', count)
+                            r = x.get(profile, params={'max_id': end_cursor})
                         
-                            ข้อมูล= re.search ( R 'หน้าต่าง. _sharedData = ( \ { . + } ) ; </ script> ' , r.text) .group ( 1 )
-                            j     = json.loads (ข้อมูล)
+                            data = re.search(r'window._sharedData = (\{.+?});</script>', r.text).group(1)
+                            j    = json.loads(data)
                         
-                            สำหรับโหนดในเจ [ ' entry_data ' ] [ ' ProfilePage ' ] [ 0 ] [ 'ใช้' ] [ 'สื่อ' ] [ 'โหน' ]:
-                                if node [ ' is_video ' ]:
-                                    page =  ' https://www.instagram.com/p/ '  + node [ ' code ' ]
-                                    r = x.get (หน้า)
-                                    URL = re.search ( R ' "video_url": " ( [ ^ " ] + ) " ' , r.text) .group ( 1 )
-                                    พิมพ์ (URL)
-                                    nadya.sendVideoWithURL (msg.to, URL)
-                                อื่น :
-                                    พิมพ์ (โหนด [ ' display_src ' ])
-                                    nadya.sendImageWithURL (msg.to, node [ ' display_src ' ])
-                            end_cursor = re.search ( r ' "end_cursor": " ( [ ^ " ] + ) " ' , r.text) กลุ่ม ( 1 )
-                elif  " searchimage " ใน msg.text.lower ():
-                    แยก= msg.text.split ( "  " )
-                    search = msg.text.replace (แยก [ 0 ] +  "  " , " " )
-                    กับ requests.session () เป็นเว็บ:
-                        web.headers [ " User-Agent " ] = random.choice (การตั้งค่า [ " userAgent " ])
-                        r = web.get ( " http://rahandiapi.herokuapp.com/imageapi?key=betakey&q= {} "รูปแบบ (urllib.parse.quote (ค้นหา))))
-                        ข้อมูล= r.text
-                        data = json.loads (data)
-                        ถ้าข้อมูล [ " result " ] ! = []:
-                            รายการ=ข้อมูล [ "ผล" ]
-                            เส้นทาง= random.choice (รายการ)
-                            a = item.index (เส้นทาง)
-                            b =  len (รายการ)
-                            nadya.sendImageWithURL (ถึง, str (เส้นทาง))
-                elif  " searchyoutube " ใน msg.text.lower ():
-                    sep = text.split ( "  " )
-                    search = text.replace (sep [ 0 ] +  "  " , " " )
-                    params = { " search_query " : search}
-                    กับ requests.session () เป็นเว็บ:
-                        web.headers [ " User-Agent " ] = random.choice (การตั้งค่า [ " userAgent " ])
-                        r = web.get ( " https://www.youtube.com/rasults " , params  = params)
-                        ซุป= BeautifulSoup (r.content, " html5lib " )
-                        ret_ =  " ╔══ [YouTube ผลลัพธ์] "
+                            for node in j['entry_data']['ProfilePage'][0]['user']['media']['nodes']: 
+                                if node['is_video']:
+                                    page = 'https://www.instagram.com/p/' + node['code']
+                                    r = x.get(page)
+                                    url = re.search(r'"video_url": "([^"]+)"', r.text).group(1)
+                                    print(url)
+                                    nadya.sendVideoWithURL(msg.to,url)
+                                else:
+                                    print (node['display_src'])
+                                    nadya.sendImageWithURL(msg.to,node['display_src'])
+                            end_cursor = re.search(r'"end_cursor": "([^"]+)"', r.text).group(1)
+                elif "รูปภาพ" in msg.text.lower():
+                    separate = msg.text.split(" ")
+                    search = msg.text.replace(separate[0] + " ","")
+                    with requests.session() as web:
+                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
+                        r = web.get("http://rahandiapi.herokuapp.com/imageapi?key=betakey&q={}".format(urllib.parse.quote(search)))
+                        data = r.text
+                        data = json.loads(data)
+                        if data["result"] != []:
+                            items = data["result"]
+                            path = random.choice(items)
+                            a = items.index(path)
+                            b = len(items)
+                            nadya.sendImageWithURL(to, str(path))
+                elif "ยูทูป" in msg.text.lower():
+                    sep = text.split(" ")
+                    search = text.replace(sep[0] + " ","")
+                    params = {"search_query": search}
+                    with requests.session() as web:
+                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
+                        r = web.get("https://www.youtube.com/results", params = params)
+                        soup = BeautifulSoup(r.content, "html5lib")
+                        ret_ = "╔══[ Youtube Result ]"
                         datas = []
-                        สำหรับข้อมูลใน soup.select ( " .yt-lockup-title> a [title] " ):
-                            ถ้า " & รายการ" ไม่ อยู่ในข้อมูล [ " href " ]:
-                                datas.append (ข้อมูล)
-                        สำหรับข้อมูลในข้อมูล:
-                            ret_ + =  " \ n ╠══ [ {} ] " .format ( str (ข้อมูล [ " title " ])))
-                            ret_ + =  " \ n ╠ https://www.youtube.com {} " .format ( str (data [ " href " ]))
-                        ret_ + =  " \ n ╚══ [Total {} ] " .format ( len (datas))
-                        nadya.sendMessage (ถึง, str (ret_))
-                elif  " searchmusic " ใน msg.text.lower ():
-                    sep = text.split ( "  " )
-                    search = text.replace (sep [ 0 ] +  "  " , " " )
-                    params = { ' songname ' : search}
-                    กับ requests.session () เป็นเว็บ:
-                        web.headers [ " User-Agent " ] = random.choice (การตั้งค่า [ " userAgent " ])
-                        r = web.get ( " https://ide.fdlrcn.com/workspace/yumi-apis/joox? "  + urllib.parse.urlencode (params))
-                        ลอง :
-                            data = json.loads (r.text)
-                            สำหรับเพลงในข้อมูล:
-                                ret_ =  " ╔══ [ดนตรี] "
-                                ret_ + =  " \ n ╠ Nama lagu: {} "รูปแบบ ( str (เพลง [ 0 ]))
-                                ret_ + =  " \ n ╠ Durasi: {} "รูปแบบ ( str (เพลง [ 1 ]))
-                                ret_ + =  " \ nลิงค์: {} "รูปแบบ ( str (เพลง [ 4 ]))
-                                ret_ + =  " \ n ╚══ [อ่านเสียง] "
-                                nadya.sendMessage (ถึง, str (ret_))
-                                nadya.sendAudioWithURL (ถึงเพลง [ 3 ])
-                        ยกเว้น :
-                            nadya.sendMessage (to, " Musik tidak ditemukan " )
-                elif  " searchlyric " ใน msg.text.lower ():
-                    sep = text.split ( "  " )
-                    search = text.replace (sep [ 0 ] +  "  " , " " )
-                    params = { ' songname ' : search}
-                    กับ requests.session () เป็นเว็บ:
-                        web.headers [ " User-Agent " ] = random.choice (การตั้งค่า [ " userAgent " ])
-                        r = web.get ( " https://ide.fdlrcn.com/workspace/yumi-apis/joox? "  + urllib.parse.urlencode (params))
-                        ลอง :
-                            data = json.loads (r.text)
-                            สำหรับเพลงในข้อมูล:
-                                เพลง=เพลง [ 5 ]
-                                lyric = songs.replace ( ' ti: ' , ' Title - ' )
-                                lyric = lyric.replace ( ' ar: ' , ' Artist - ' )
-                                lyric = lyric.replace ( ' al: ' , 'อัลบั้ม - ' )
-                                removeString =  " [1234567890 .:] "
-                                สำหรับ char ใน removeString:
-                                    lyric = lyric.replace (char, ' ' )
-                                ret_ =  " ╔══ [บทกวี] "
-                                ret_ + =  " \ n ╠ Nama lagu: {} "รูปแบบ ( str (เพลง [ 0 ]))
-                                ret_ + =  " \ n ╠ Durasi: {} "รูปแบบ ( str (เพลง [ 1 ]))
-                                ret_ + =  " \ nลิงค์: {} "รูปแบบ ( str (เพลง [ 4 ]))
-                                ret_ + =  " \ n ╚══ [เสร็จสิ้น] \ n {} " .format ( STR (บทกวี))
-                                nadya.sendMessage (ถึง, str (ret_))
-                        ยกเว้น :
-                            nadya.sendMessage (ถึง" Lirik tidak ditemukan " )
-            elif msg.contentType ==  7 :
-                ถ้าการตั้งค่า [ "สติกเกอร์" ] ==  True :
-                    stk_id = msg.contentMetadata [ ' STKID ' ]
-                    stk_ver = msg.contentMetadata [ ' STKVER ' ]
-                    pkg_id = msg.contentMetadata [ ' STKPKGID ' ]
-                    ret_ =  " ╔══ (ข้อมูลสติกเกอร์) "
-                    ret_ + =  " \ n ╠สติกเกอร์ id: {} "รูปแบบ (stk_id)
-                    ret_ + =  " \ nเกร็ดความรู้: {} " .format (pkg_id)
-                    ret_ + =  " \ n ╠เวอร์ชั่นสติก: {} "รูปแบบ (stk_ver)
-                    ret_ + =  " \ n ╠ลิ้งสติกเกอร์: บรรทัด: // ร้าน / รายละเอียด / {} " .format (pkg_id)
-                    ret_ + =  " \ n ╚══ (ข้อมูลสติกเกอร์) "
-                    nadya.sendMessage (ถึง, str (ret_))
+                        for data in soup.select(".yt-lockup-title > a[title]"):
+                            if "&lists" not in data["href"]:
+                                datas.append(data)
+                        for data in datas:
+                            ret_ += "\n╠══[ {} ]".format(str(data["title"]))
+                            ret_ += "\n╠ https://www.youtube.com{}".format(str(data["href"]))
+                        ret_ += "\n╚══[ Total {} ]".format(len(datas))
+                        nadya.sendMessage(to, str(ret_))
+                elif "ขอเพลง" in msg.text.lower():
+                    sep = text.split(" ")
+                    search = text.replace(sep[0] + " ","")
+                    params = {'songname': search}
+                    with requests.session() as web:
+                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
+                        r = web.get("https://ide.fdlrcn.com/workspace/yumi-apis/joox?" + urllib.parse.urlencode(params))
+                        try:
+                            data = json.loads(r.text)
+                            for song in data:
+                                ret_ = "╔══[ Music ]"
+                                ret_ += "\n╠ Nama lagu : {}".format(str(song[0]))
+                                ret_ += "\n╠ Durasi : {}".format(str(song[1]))
+                                ret_ += "\n╠ Link : {}".format(str(song[4]))
+                                ret_ += "\n╚══[ reading Audio ]"
+                                nadya.sendMessage(to, str(ret_))
+                                nadya.sendAudioWithURL(to, song[3])
+                        except:
+                            nadya.sendMessage(to, "Musik tidak ditemukan")
+                elif "เนื้อเพลง" in msg.text.lower():
+                    sep = text.split(" ")
+                    search = text.replace(sep[0] + " ","")
+                    params = {'songname': search}
+                    with requests.session() as web:
+                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
+                        r = web.get("https://ide.fdlrcn.com/workspace/yumi-apis/joox?" + urllib.parse.urlencode(params))
+                        try:
+                            data = json.loads(r.text)
+                            for song in data:
+                                songs = song[5]
+                                lyric = songs.replace('ti:','Title - ')
+                                lyric = lyric.replace('ar:','Artist - ')
+                                lyric = lyric.replace('al:','Album - ')
+                                removeString = "[1234567890.:]"
+                                for char in removeString:
+                                    lyric = lyric.replace(char,'')
+                                ret_ = "╔══[ Lyric ]"
+                                ret_ += "\n╠ Nama lagu : {}".format(str(song[0]))
+                                ret_ += "\n╠ Durasi : {}".format(str(song[1]))
+                                ret_ += "\n╠ Link : {}".format(str(song[4]))
+                                ret_ += "\n╚══[ Finish ]\n{}".format(str(lyric))
+                                nadya.sendMessage(to, str(ret_))
+                        except:
+                            nadya.sendMessage(to, "Lirik tidak ditemukan")
+	    elif msg.contentType == 7:
+                if settings["สติกเกอร์"] == True:
+                    stk_id = msg.contentMetadata['STKID']
+                    stk_ver = msg.contentMetadata['STKVER']
+                    pkg_id = msg.contentMetadata['STKPKGID']
+                    ret_ = "╔══( ข้อมูลสติกเกอร์ )"
+                    ret_ += "\n╠ สติกเกอร์ id : {}".format(stk_id)
+                    ret_ += "\n╠ แพคเกจสติกเกอร์ : {}".format(pkg_id)
+                    ret_ += "\n╠ เวอร์ชั่นสติกเกอร: {}".format(stk_ver)
+                    ret_ += "\n╠ ลิ้งสติกเกอร์ : line://shop/detail/{}".format(pkg_id)
+                    ret_ += "\n╚══( ข้อมูลสติกเกอร์ )"
+                    nadya.sendMessage(to, str(ret_))
                     
-            elif msg.contentType ==  13 :
-                ถ้าการตั้งค่า [ " copy " ] ==  True :
-                    _name = msg.contentMetadata [ " displayName " ]
-                    copy = msg.contentMetadata [ " mid " ]
-                    groups = nadya.getGroup (msg.to)
-                    เป้าหมาย= []
-                    สำหรับ s ในกลุ่มสมาชิก:
-                        ถ้า _name ใน s.displayName:
-                            พิมพ์ ( " [Target] Copy " )
-                            หยุด                             
-                        อื่น :
-                            targets.append (สำเนา)
-                    ถ้าเป้าหมาย== []:
-                        nadya.sendText (msg.to, "ไม่พบ ... " )
-                        ผ่านไป
-                    อื่น :
-                        สำหรับเป้าหมายในเป้าหมาย:
-                            ลอง :
-                                nadya.cloneContactProfile (เป้าหมาย)
-                                nadya.sendMessage (msg.to, "สมาชิก Berhasil โคลนทังสเตนเบรียนซาปาร์" )
-                                settings [ ' copy ' ] =  เท็จ
-                                หยุด
-                            ยกเว้น :
-                                     msg.contentMetadata = { ' mid ' : target}
-                                     การตั้งค่า [ " copy " ] =  เท็จ
-                                     หยุด                     
+            elif msg.contentType == 13:
+                if settings["copy"] == True:
+                    _name = msg.contentMetadata["displayName"]
+                    copy = msg.contentMetadata["mid"]
+                    groups = nadya.getGroup(msg.to)
+                    targets = []
+                    for s in groups.members:
+                        if _name in s.displayName:
+                            print ("[Target] Copy")
+                            break                             
+                        else:
+                            targets.append(copy)
+                    if targets == []:
+                        nadya.sendText(msg.to, "Not Found...")
+                        pass
+                    else:
+                        for target in targets:
+                            try:
+                                nadya.cloneContactProfile(target)
+                                nadya.sendMessage(msg.to, "Berhasil clone member tunggu beberapa saat sampai profile berubah")
+                                settings['copy'] = False
+                                break
+                            except:
+                                     msg.contentMetadata = {'mid': target}
+                                     settings["copy"] = False
+                                     break                     
                     
                     
-# =========================================== ============================= #
-        if op.type ==  26 :
-            พิมพ์ ( " [26] ข้อความที่ได้รับ" )
+#==============================================================================#
+        if op.type == 26:
+            print ("[ 26 ] RECEIVE MESSAGE")
             msg = op.message
             text = msg.text
             msg_id = msg.id
-            ผู้รับ= msg.to
-            ผู้ส่ง= msg._from
-            ถ้า msg.toType ==  0 :
-                ถ้าผู้ส่ง= nadya.profile.mid:
+            receiver = msg.to
+            sender = msg._from
+            if msg.toType == 0:
+                if sender != nadya.profile.mid:
                     to = sender
-                อื่น :
-                    ถึง=รับ
-            อื่น :
-                ถึง=รับ
-                ถ้าการตั้งค่า [ " autoRead " ] ==  True :
-                    nadya.sendChatChecked (to, msg_id)
-                ถ้าไปในการอ่าน [ " readPoint " ]:
-                    ถ้าผู้ส่งไม่ได้ ในการอ่าน [ "รอม" ] [จะ]:
-                        อ่าน [ " ROM " ] [to] [ผู้ส่ง] =  จริง
-                ถ้าผู้ส่งในการตั้งค่า [ "เลียนแบบ" ] [ "กำหนดเป้าหมาย" ] และการตั้งค่า [ "เลียนแบบ" ] [ "สถานะ" ] ==  ทรู และการตั้งค่า [ "เลียนแบบ" ] [ "เป้าหมาย" ] [ส่ง] ==  True :
+                else:
+                    to = receiver
+            else:
+                to = receiver
+                if settings["autoRead"] == True:
+                    nadya.sendChatChecked(to, msg_id)
+                if to in read["readPoint"]:
+                    if sender not in read["ROM"][to]:
+                        read["ROM"][to][sender] = True
+                if sender in settings["mimic"]["target"] and settings["mimic"]["status"] == True and settings["mimic"]["target"][sender] == True:
                     text = msg.text
-                    ถ้าข้อความเป็น ไม่ได้ ไม่มี :
-                        nadya.sendMessage (msg.to ข้อความ)
-                ถ้า msg.contentType ==  0  และผู้ส่งไม่ได้ อยู่ใน nadyaMID และ msg.toType ==  2 :
-                    ถ้า " MENTION " ใน รายการ (msg.contentMetadata.keys ()) ! =  ไม่มี :
-                        ถ้าการตั้งค่า [ ' Tag2 ' ] ==  True :
-                             contact = nadya.getContact (msg._from)
+                    if text is not None:
+                        nadya.sendMessage(msg.to,text)
+                if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
+                    if "MENTION" in list(msg.contentMetadata.keys())!= None:
+                        if settings['Tag2'] == True:
+                             contact = nadya.getContact(msg._from)
                              cName = contact.pictureStatus
-                             balas = [ " http://dl.profile.line-cdn.net/ "  + cName]
-                             ret_ = random.choice (balas)
-                             กล่าวถึง= ast.literal_eval (msg.contentMetadata [ "กล่าวถึง" ])
-                             mentionees =พูดถึง [ " MENTIONEES " ]
-                             สำหรับการกล่าวถึงใน mentionees:
-                                   ถ้าพูดถึง [ " M " ] ใน nadyaMID:
-                                          nadya.sendImageWithURL (ไป ret_)
-                                          หยุด
-                ถ้า msg.contentType ==  0  และผู้ส่งไม่ได้ อยู่ใน nadyaMID และ msg.toType ==  2 :
-                    ถ้า " MENTION " ใน รายการ (msg.contentMetadata.keys ()) ! =  ไม่มี :
-                         ถ้าการตั้งค่า [ ' detectMention ' ] ==  True :
-                             contact = nadya.getContact (msg._from)
+                             balas = ["http://dl.profile.line-cdn.net/" + cName]
+                             ret_ = random.choice(balas)
+                             mention = ast.literal_eval(msg.contentMetadata["MENTION"])
+                             mentionees = mention["MENTIONEES"]
+                             for mention in mentionees:
+                                   if mention["M"] in nadyaMID:
+                                          nadya.sendImageWithURL(to,ret_)
+                                          break
+                if msg.contentType == 0 and sender not in nadyaMID and msg.toType == 2:
+                    if "MENTION" in list(msg.contentMetadata.keys()) != None:
+                         if settings['detectMention'] == True:
+                             contact = nadya.getContact(msg._from)
                              cName = contact.displayName
-                             balas = [ "แทึคกูนี้แอบชอบกูไช้ ป่ะ😁 " ]
-                             ret_ =  " "  + random.choice (balas)
-                             ชื่อ= re.findall ( r ' @ ( \ w + ) ' , msg.text)
-                             กล่าวถึง= ast.literal_eval (msg.contentMetadata [ "กล่าวถึง" ])
-                             mentionees =พูดถึง [ ' MENTIONEES ' ]
-                             สำหรับการกล่าวถึงใน mentionees:
-                                   ถ้าพูดถึง [ ' M ' ] ใน nadyaMID:
-                                          nadya.sendMessage (ไป ret_)
-                                          sendMessageWithMention (ถึง, contact.mid)
-                                          หยุด
+                             balas = ["(ข้อความออโต้) เจ้าของไลน์ไม่อยู่มีไรแชทมาครับ"]
+                             ret_ = "" + random.choice(balas)
+                             name = re.findall(r'@(\w+)', msg.text)
+                             mention = ast.literal_eval(msg.contentMetadata["MENTION"])
+                             mentionees = mention['MENTIONEES']
+                             for mention in mentionees:
+                                   if mention['M'] in nadyaMID:
+                                          nadya.sendMessage(to,ret_)
+                                          sendMessageWithMention(to, contact.mid)
+                                          break
 
-# =========================================== ============================= #
-        ถ้า op.type ==  55 :
-            พิมพ์ ( " [55] NOTIVEED READ MESSAGE " )
-            ลอง :
-                ถ้า op.param1 ในการอ่าน [ ' readPoint ' ]:
-                    ถ้า op.param2 ในการอ่าน [ ' readMember ' ] [op.param1]:
-                        ผ่านไป
-                    อื่น :
-                        อ่าน [ ' readMember ' ] [op.param1] + = op.param2
-                    อ่าน [ ' ROM ' ] [op.param1] [op.param2] = op.param2
-                    สำรองข้อมูล()
-                อื่น :
-                   ผ่านไป
-            ยกเว้น :
-                ผ่านไป
-    ยกเว้น ข้อยกเว้น เป็นข้อผิดพลาด:
-        : ฟังก์ชัน LogError (ผิด)
-# =========================================== ============================= #
-ขณะที่ True :
-    ลอง :
-        ops = oepoll.singleTrace ( นับ= 50 )
-        ถ้า Ops เป็น ไม่ได้ ไม่มี :
-            สำหรับ op ใน ops:
-                lineBot (สหกรณ์)
-                oepoll.setRevision (op.revision)
-    ยกเว้น ข้อยกเว้น เช่น e:
-        : ฟังก์ชัน LogError (จ)
+#==============================================================================#
+        if op.type == 55:
+            print ("[ 55 ] NOTIFIED READ MESSAGE")
+            try:
+                if op.param1 in read['readPoint']:
+                    if op.param2 in read['readMember'][op.param1]:
+                        pass
+                    else:
+                        read['readMember'][op.param1] += op.param2
+                    read['ROM'][op.param1][op.param2] = op.param2
+                    backupData()
+                else:
+                   pass
+            except:
+                pass
+    except Exception as error:
+        logError(error)
+#==============================================================================#
+while True:
+    try:
+        ops = oepoll.singleTrace(count=50)
+        if ops is not None:
+            for op in ops:
+                lineBot(op)
+                oepoll.setRevision(op.revision)
+    except Exception as e:
+        logError(e)
+		
