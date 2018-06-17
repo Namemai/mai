@@ -464,6 +464,11 @@ def lineBot(op):
                 elif text.lower() == 'clonecontact':
                     settings["copy"] = True
                     nadya.sendMessage(to, "ก็อปปี้ด้วยคอนแทคʕ•ᴥ•ʔ")
+                elif msg.text.lower().startswith("เขียน "):
+                    sep = msg.text.split(" ")
+                    textnya = msg.text.replace(sep[0] + " ","")
+                    urlnya = "http://chart.apis.google.com/chart?chs=480x80&cht=p3&chtt=" + textnya + "&chts=FFFFFF,70&chf=bg,s,000000"
+                    nadya.sendImageWithURL(msg.to, urlnya)
 #==============================================================================#
                 elif text.lower() == '!แทค':
                     gs = nadya.getGroup(to)
