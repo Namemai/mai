@@ -303,20 +303,7 @@ def lineBot(op):
                 if text is None:
                     return
 #==============================================================================#
-       wait = {"welle":False.}
-if op.type == 17:
-    if wait["welle"]:
-        nadya.sendMessage(to, "ยินดีต้อนรับ")
 
-if op.type == 25:
-    msg = op.message
-    if msg.text is None:
-        return
-    elif "เปิดรับ" == msg.text:
-        wait["welle"] = True
-
-    elif "ปิดออก" == msg.text:
-         wait["welle"] = False
 
 
 
@@ -1253,12 +1240,27 @@ if op.type == 25:
                                           nadya.sendMessage(to,ret_)
                                           sendMessageWithMention(to,)
                                           break
-                if msg.text in ["maitag","Maitag","แท็ค"]:
+                if msg.text in ["maitag","Maitag","แท็ค","tag","Tagall","Tag"]:
                     nadya.sendMessage(to, "แทค")
-                if msg.text in ["เปิดแทคชื่อ"]:
+                if msg.text in ["เปิดเข้ากลุ่ม"]:
+                    nadya.sendMessage(to, "เปิดเข้ากลุ่ม")
+                if msg.text in ["ปิดเข้ากลุ่ม"]:
+                    nadya.sendMessage(to, "ปิดเข้ากลุ่ม")
+		if msg.text in ["set","เชค"]:
+                    nadya.sendMessage(to, "เชคค่า")
+		if msg.text in ["เปิดแทคชื่อ"]
                     nadya.sendMessage(to, "เปิดแทคชื่อ")
-                if msg.text in ["เปิดแทคภาพ"]:
-                    nadya.sendMessage(to, "เปิดแทคภาพ")
+		if msg.text in ["เปิดแทครูป"]
+                    nadya.sendMessage(to, "เปิดแทครูป")
+		if msg.text in ["เปิดอ่านแชท"]
+                    nadya.sendMessage(to, "เปิดอ่านแชท)
+		if msg.text in ["เชคห้อง"]
+                    nadya.sendMessage(to, "เชคห้อง")
+		if msg.text in ["sp","Sp","Speed","speed"]
+                    nadya.sendMessage(to, "แรงคับแรงมองแทบไม่ทัน")
+
+
+
 #==============================================================================#
         if op.type == 55:
             print ("[ 55 ] NOTIFIED READ MESSAGE")
