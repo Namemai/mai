@@ -1246,21 +1246,18 @@ def lineBot(op):
                     nadya.sendMessage(to, "เปิดเข้ากลุ่ม")
                 if msg.text in ["ปิดเข้ากลุ่ม"]:
                     nadya.sendMessage(to, "ปิดเข้ากลุ่ม")
-		if msg.text in ["set","เชค","Set"]:
+                if msg.text in ["set","เชค","Set"]:
                     nadya.sendMessage(to, "เชคค่า")
-		if msg.text in ["เปิดแทคชื่อ"]:
+                if msg.text in ["เปิดแทคชื่อ"]:
                     nadya.sendMessage(to, "เปิดแทคชื่อ")
-		if msg.text in ["เปิดแทครูป"]:
+                if msg.text in ["เปิดแทครูป"]:
                     nadya.sendMessage(to, "เปิดแทครูป")
-		if msg.text in ["เปิดอ่านแชท"]:
+                if msg.text in ["เปิดอ่านแชท"]:
                     nadya.sendMessage(to, "เปิดอ่านแชท)
-		if msg.text in ["เชคห้อง"]:
+                if msg.text in ["เชคห้อง"]:
                     nadya.sendMessage(to, "เชคห้อง")
-		if msg.text in ["sp","Sp","Speed","speed"]
-                    nadya.sendMessage(to, "แรงคับแรงมองแทบไม่ทัน")
-
-
-
+                if msg.text in ["sp","Sp","Speed","speed"]
+                    nadya.sendMessage(to, "แรงมองแทบไม่ทันเลยครับเจ้านาย")
 #==============================================================================#
         if op.type == 55:
             print ("[ 55 ] NOTIFIED READ MESSAGE")
