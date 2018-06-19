@@ -303,10 +303,10 @@ def lineBot(op):
                 if text is None:
                     return
 #==============================================================================#
-wait = {"welle"}:False,
+wait = {"welle":False,}
 if op.type == 17:
     if wait["welle"]:
-        nadya.sendMessage("ยินดีต้อนรับ")
+        nadya.sendMessage(to, "ยินดีต้อนรับ")
 
 if op.type == 25:
     msg = op.message
@@ -317,10 +317,6 @@ if op.type == 25:
 
     elif "ปิดออก" == msg.text:
          wait["welle"] = False
-
-
-
-
 
 
 
