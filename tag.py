@@ -1250,8 +1250,8 @@ def lineBot(op):
                     nadya.sendMessage(to, "เชคค่า")
                 if msg.text in ["เปิดแทคชื่อ"]:
                     nadya.sendMessage(to, "เปิดแทคชื่อ")
-                if msg.text in ["เปิดแทครูป"]:
-                    nadya.sendMessage(to, "เปิดแทครูป")
+                if msg.text in ["เปิดแทคภาพ"]:
+                    nadya.sendMessage(to, "เปิดแทคภาพ")
                 if msg.text in ["เปิดอ่านแชท"]:
                     nadya.sendMessage(to, "เปิดอ่านแชท")
                 if msg.text in ["เชคห้อง"]:
