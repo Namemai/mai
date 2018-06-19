@@ -1256,7 +1256,7 @@ def lineBot(op):
                     nadya.sendMessage(to, "เปิดอ่านแชท")
                 if msg.text in ["เชคห้อง"]:
                     nadya.sendMessage(to, "เชคห้อง")
-                if msg.text in ["sp","Sp","Speed","speed"]
+                if msg.text in ["sp","Sp","Speed","speed"]:
                     nadya.sendMessage(to, "แรงมองแทบไม่ทันเลยครับเจ้านาย")
 #==============================================================================#
         if op.type == 55:
