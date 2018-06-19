@@ -303,6 +303,38 @@ def lineBot(op):
                 if text is None:
                     return
 #==============================================================================#
+wait = {"welle"}:False,
+if op.type == 17:
+    if wait["welle"]:
+        nadya.sendMessage("ยินดีต้อนรับ")
+
+if op.type == 25:
+    msg = op.message
+    if msg.text is None:
+        return
+    elif "เปิดรับ" == msg.text:
+        wait["welle"] = True
+
+    elif "ปิดออก" == msg.text:
+         wait["welle"] = False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#==============================================================================#
                 if text.lower() == 'h1':
                     helpMessage = helpmessage()
                     nadya.sendMessage(to, str(helpMessage))
