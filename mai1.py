@@ -642,6 +642,15 @@ def lineBot(op):
                         except:
                             nadya.sendText(msg.to,"Error")
 #==============================================================================#
+                elif msg.text in ["เชิญ"]:
+                    if msg.from_ in admin:
+                     wait["winvite"] = True
+                     nadya.sendText(msg.to,"send contact")
+                elif "#ประกาศ:" in msg.text:
+                    bctxt = msg.text.replace("#ประกาศ:", "")
+                    a = nadya.getGroupIdsJoined()
+                    for manusia in a:
+                    nadya.sendText(manusia, (bctxt))
                 elif "Mc " in msg.text:
                     mmid = msg.text.replace("Mc ","")
                     nadya.sendContact(to, mmid)
