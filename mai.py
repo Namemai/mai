@@ -695,14 +695,14 @@ def lineBot(op):
                         if settings["mimic"]["status"] == True:
                             settings["mimic"]["status"] = False
                             nadya.sendMessage(msg.to,"ปิดระบบพิมตามแล้วครับเจ้านายʕ•ᴥ•ʔ")
-                elif "เด้ง:" in text:
-                    midd = msg.text.replace("เด้ง:","")
+                elif "เตะดึง " in text:
+                    midd = msg.text.replace("เตะดึง ","")
                     nadya. kickoutFromGroup(msg.to,[midd])
                     nadya. findAndAddContactsByMid(midd)
                     nadya.inviteIntoGroup(msg.to,[midd])
                     nadya.cancelGroupInvitation(msg.to,[midd])
-                elif "เด้ง " in msg.text:
-                        vkick0 = msg.text.replace("เด้ง ","")
+                elif "เตะดึง " in msg.text:
+                        vkick0 = msg.text.replace("เตะดึง ","")
                         vkick1 = vkick0.rstrip()
                         vkick2 = vkick1.replace("@","")
                         vkick3 = vkick2.rstrip()
