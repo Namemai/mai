@@ -315,7 +315,7 @@ def lineBot(op):
            # cb.text = cl.getContact(op.param2).displayName + "\n😭😭ไปแล้วหรอคิดถึงก็กลับมา\n"+group.name+"ใหม่นะ😢"
            # cl.sendMessage(cb)
 #==============================================================================#
-            elif msg.text in ["on"]:
+                elif msg.text in ["on"]:
                 if wait["acommentOn"] == True:
                     if wait["lang"] == "JP":
                         nadya.sendText(msg.to,"➠ เปิดข้อความต้อนรับเเล้ว🇹🇭👌")
