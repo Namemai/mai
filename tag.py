@@ -276,6 +276,12 @@ def lineBot(op):
             if settings["autoAdd"] == True:
             	nadya.blockContact(op.param1)
                 #nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
+        if op.type == 17:
+            group = nadya.getGroup(op.param1)
+            cb = Message()
+            cb.to = op.param1
+            cb.text = nadya.getContact(op.param2).displayName +"\n🌟ยินดีต้อนรับเข้าสู่🌟\n👉"+group.name
+            nadya.sendMessage(cb)
         if op.type == 13:
             print ("[ 13 ] NOTIFIED INVITE GROUP")
             group = nadya.getGroup(op.param1)
@@ -302,18 +308,6 @@ def lineBot(op):
             if msg.contentType == 0:
                 if text is None:
                     return
-        if op.type == 17:
-            group = nadya.getGroup(op.param1)
-            cb = Message()
-            cb.to = op.param1
-            cb.text = nadya.getContact(op.param2).displayName +"\n🌟ยินดีต้อนรับเข้าสู่🌟\n👉"+group.name
-            nadya.sendMessage(cb)
-        #if op.type == 15:
-           # group = cl.getGroup(op.param1)
-           # cb = Message()
-           # cb.to = op.param1
-           # cb.text = cl.getContact(op.param2).displayName + "\n😭😭ไปแล้วหรอคิดถึงก็กลับมา\n"+group.name+"ใหม่นะ😢"
-           # cl.sendMessage(cb)
 #==============================================================================#
 
 #==============================================================================#
