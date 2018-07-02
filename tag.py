@@ -275,13 +275,7 @@ def lineBot(op):
             print ("[ 5 ] NOTIFIED ADD CONTACT")
             if settings["autoAdd"] == True:
             	nadya.blockContact(op.param1)
-                #nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
-        if op.type == 17:
-            group = nadya.getGroup(op.param1)
-            cb = Message()
-            cb.to = op.param1
-            cb.text = nadya.getContact(op.param2).displayName +"\n🌟ยินดีต้อนรับเข้าสู่🌟\n👉"+group.name
-            nadya.sendMessage(cb)
+                nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
         if op.type == 13:
             print ("[ 13 ] NOTIFIED INVITE GROUP")
             group = nadya.getGroup(op.param1)
@@ -373,11 +367,11 @@ def lineBot(op):
                              nadya.sendMessage(msg.to,"ลบรันหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                           except:
                              pass
-                elif text.lower() == 'speed':
+                elif text.lower() == 'sp':
                     start = time.time()
                     nadya.sendMessage(to, "ช้ามากครับเจ้านาย")
                     elapsed_time = time.time() - start
-                    nadya.sendMessage(to, "\n\n{}วินาที\n\n✍️".format(str(elapsed_time)))
+                    nadya.sendMessage(to, "{}วินาที".format(str(elapsed_time)))
                 elif text.lower() == 'รีบอท':
                     nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
                     time.sleep(5)
