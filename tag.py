@@ -302,21 +302,31 @@ def lineBot(op):
             if msg.contentType == 0:
                 if text is None:
                     return
+        if op.type == 17:
+            group = nadya.getGroup(op.param1)
+            cb = Message()
+            cb.to = op.param1
+            cb.text = nadya.getContact(op.param2).displayName +"\n🌟ยินดีต้อนรับเข้าสู่🌟\n👉"+group.name
+            nadya.sendMessage(cb)
+        #if op.type == 15:
+           # group = cl.getGroup(op.param1)
+           # cb = Message()
+           # cb.to = op.param1
+           # cb.text = cl.getContact(op.param2).displayName + "\n😭😭ไปแล้วหรอคิดถึงก็กลับมา\n"+group.name+"ใหม่นะ😢"
+           # cl.sendMessage(cb)
 #==============================================================================#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            elif msg.text in ["on"]:
+                if wait["acommentOn"] == True:
+                    if wait["lang"] == "JP":
+                        nadya.sendText(msg.to,"➠ เปิดข้อความต้อนรับเเล้ว🇹🇭👌")
+                    else:
+                        nadya.sendText(msg.to,"Already on")
+                else:
+                    wait["acommentOn"] = True
+                    if wait["lang"] == "JP":
+                        nadya.sendText(msg.to,"➠ เปิดข้อความต้อนรับเเล้ว🇹🇭👌")
+                    else:
+                        nadya.sendText(msg.to,"Already on"
 #==============================================================================#
                 if text.lower() == 'h1':
                     helpMessage = helpmessage()
