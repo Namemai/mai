@@ -275,7 +275,7 @@ def lineBot(op):
             print ("[ 5 ] NOTIFIED ADD CONTACT")
             if settings["autoAdd"] == True:
             	nadya.blockContact(op.param1)
-                nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
+                nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1)
         if op.type == 13:
             print ("[ 13 ] NOTIFIED INVITE GROUP")
             group = nadya.getGroup(op.param1)
