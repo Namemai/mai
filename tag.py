@@ -369,9 +369,9 @@ def lineBot(op):
                              pass
                 elif text.lower() == 'sp':
                     start = time.time()
-                    nadya.sendMessage(to, "ช้ามากครับเจ้านาย")
+                    nadya.sendMessage(to, "ความเร็วบอทอยู่ที่")
                     elapsed_time = time.time() - start
-                    nadya.sendMessage(to, "{}วินาที".format(str(elapsed_time)))
+                    nadya.sendMessage(to, "{}".format(str(elapsed_time)))
                 elif text.lower() == 'รีบอท':
                     nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
                     time.sleep(5)
