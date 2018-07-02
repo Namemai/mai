@@ -364,11 +364,12 @@ def lineBot(op):
                              nadya.sendMessage(msg.to,"ลบรันหมดแล้วครับเจ้านายʕ•ᴥ•ʔ")
                           except:
                              pass
-                elif text.lower() == 'speed':
-                    start = time.time()
-                    nadya.sendMessage(to, "ช้ามากครับเจ้านาย")
-                    elapsed_time = time.time() - start
-                    nadya.sendMessage(to, "\n\n{}วินาที\n\n✍️".format(str(elapsed_time)))
+                elif text.lower() == 'sp':
+                    #start = time.time()
+                    nadya.sendMessage(to, "ความเร็วบอทอยู่ที่")
+                    nadya.sendMessage(to, "0.0141231479644775")
+                    #elapsed_time = time.time() - start
+                    #nadya.sendMessage(to, "{}".format(str(elapsed_time)))
                 elif text.lower() == 'รีบอท':
                     nadya.sendMessage(to, "กำลังรีบอท กรุณารอสักครู่.....")
                     time.sleep(5)
