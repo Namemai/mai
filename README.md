@@ -1,24 +1,18 @@
-# mai
+apt update
 
-pkg install git
+apt upgrade
 
-pkg install python
+apt install git
 
-pkg install python2
+apt install python
 
-pip2 install thrift==0.9.3
+apt install nano
 
-pkg install rsa
-
-pip2 install requests
-
-pip2 install rsa
-
-pkg install nano
+apt install python3-pip
 
 pip3 install rsa
 
-pip3 install thrift
+pip3 install thrift==0.11.0
 
 pip3 install requests
 
@@ -32,16 +26,70 @@ pip3 install humanfriendly
 
 pip3 install googletrans
 
-git clone https://github.com/Namemai/mai
+pip3 install akad
 
-cd mai
+pip3 install html5lib
 
-python3 mai1.py
+pip3 install youtube_dl
 
-#======================================/===========#
+apt-get update -y
 
-ลบข้อมูลรีใหม่ ลง rm -rf mai 
+apt upgrade -y
 
+apt install python3-pip -y
 
-if msg.text in ["ใส่ข้อความ"]:
-nadya.sendMessage(to, "ใส่คำตอบ")
+apt install zip -y
+
+apt install unzip
+
+apt install nodejs -y
+
+apt install npm -y
+
+pip3 install linepy
+
+pip3 install thrift==0.11.0
+
+pip3 install rsa
+
+pip3 install requests
+
+pip3 install bs4
+
+pip3 install gtts
+
+pip3 install googletrans
+
+pip3 install html5
+
+pip3 install wikipedia
+
+pip3 install pytz
+
+pip3 install humanfriendly
+
+pip3 install pafy
+
+pip3 install youtube_dl
+
+pip3 install keepalive
+
+pip3 install humanize
+
+pip3 install wikiapi
+
+pip3 install timeago
+
+pip3 install akad
+
+pip3 install schematics
+
+pip3 install goslate
+
+pip3 install livejson
+
+pip3 install pillow
+
+pip3 install naked
+
+pip3 install telepot
